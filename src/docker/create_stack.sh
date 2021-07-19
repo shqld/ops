@@ -1,0 +1,11 @@
+#!/bin/bash
+
+set -eu
+
+cd $OPS_DIR/src
+
+echo "(commands/sho/create_stack)"
+
+REPO=$REPO VERSION=latest commands/sho/docker-pull
+REPO=$REPO NAME=$STACK_NAME commands/sho/docker-stack-up
+

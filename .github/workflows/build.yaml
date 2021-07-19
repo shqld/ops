@@ -1,0 +1,19 @@
+name: Echo test
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+    echo-test:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v2
+            - name: Executing remote ssh commands
+              uses: appleboy/ssh-action@master
+              with:
+                  host: ${{ secrets.MENIAL_HOST }}
+                  username: ${{ secrets.MENIAL_USERNAME }}
+                  key: ${{ secrets.MENIAL_TOKEN }}
+                  script: '$OPS_DIR/src/commands/sho/docker-pull'
