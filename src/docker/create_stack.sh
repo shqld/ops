@@ -2,7 +2,7 @@
 
 set -eu
 
-cd $OPS_DIR/src
+cd /ops/src
 
 echo "(commands/sho/create_stack)"
 

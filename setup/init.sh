@@ -16,7 +16,7 @@ sh setup/scripts/3_install_deps.sh
 sh setup/scripts/4_fetch_git_repo.sh
 sh setup/scripts/5_init_user_menial.sh
 
-sh $OPS_DIR/src/docker/setup.sh
+sh /ops/src/docker/setup.sh
 
 rm -r setup
 

@@ -2,7 +2,7 @@
 
 set -eu
 
-cd $OPS_DIR
+cd /ops
 
 echo "(add_user_menial) Starting ..."
 
@@ -24,7 +24,7 @@ if grep "menial ALL=(root)" < /etc/sudoers; then
 else
   echo "Adding permissions to user(menial) ..."
   for command in src/commands/sho/*; do
-    echo "menial ALL=(ALL) NOPASSWD: $OPS_DIR/$command" >> /etc/sudoers
+    echo "menial ALL=(ALL) NOPASSWD: /ops/src/commands/sho/$command" >> /etc/sudoers
   done
 fi
 

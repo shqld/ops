@@ -14,8 +14,8 @@ echo "(fetch_git_repo) Testing connection to git@github.com ..."
 ssh -T -oStrictHostKeyChecking=no git@github.com || echo "(fetch_git_repo) Skipping ..."
 
 echo "(fetch_git_repo) Cloning github.com:shqld/ops ..."
-rm -rf $OPS_DIR
-git clone --depth 1 git@github.com:shqld/ops $OPS_DIR
+rm -rf /ops
+git clone --depth 1 git@github.com:shqld/ops /ops
 
 echo "(fetch_git_repo) Done"
 

@@ -1,5 +1,5 @@
 set -eu
 
-cd $OPS_DIR/src
+cd /ops/src
 
 docker stack up --compose-file config/$REPO.docker-compose.yaml $NAME
