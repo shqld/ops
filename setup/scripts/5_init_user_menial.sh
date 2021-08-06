@@ -28,8 +28,10 @@ fi
 cd /home/menial
 
 echo "Setting ssh config ..."
-mkdir .ssh
-chmod 700 .ssh
+if [ ! -d .ssh ]; then
+  mkdir .ssh
+  chmod 700 .ssh
+fi
 echo $AUTHORIZED_KEY_MENIAL > .ssh/authorized_keys
 chmod 600 .ssh/authorized_keys
 chown menial -R .ssh
