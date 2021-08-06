@@ -16,4 +16,4 @@ jobs:
                   host: ${{ secrets.MENIAL_HOST }}
                   username: ${{ secrets.MENIAL_USERNAME }}
                   key: ${{ secrets.MENIAL_TOKEN }}
-                  script: '/home/sho/ops/src/commands/sho/docker-pull'
+                  script: 'sudo /home/sho/ops/src/commands/sho/docker-pull'
