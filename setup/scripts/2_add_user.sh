@@ -21,8 +21,9 @@ else
   groupadd docker
 fi
 
-echo "Adding user(sho) to group(docker ) ..."
+echo "Adding user(sho) to group(docker, ops) ..."
 usermod -a -G docker sho
+usermod -a -G ops sho
 
 if grep "sho ALL=(root)" < /etc/sudoers; then
   echo "Skipping adding sho to sudoers ..."

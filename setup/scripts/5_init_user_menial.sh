@@ -13,6 +13,9 @@ else
   useradd menial
 fi
 
+echo "Adding user(menial) to group(ops) ..."
+usermod -a -G ops menial
+
 echo "Modifying sho's commands ..."
 chmod +x src/commands/sho/*
 
