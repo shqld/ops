@@ -24,11 +24,15 @@ fi
 echo "Adding user(sho) to group(docker ) ..."
 usermod -a -G docker sho
 
-echo "Adding sho to sudoers ..."
-echo "
-sho ALL=(root) $(which yum)
-sho ALL=(root) $(which git)
-sho ALL=(root) $(which systemctl)
-" >> /etc/sudoers
+if grep "sho ALL=(root)" < /etc/sudoers; then
+  echo "Skipping adding sho to sudoers ..."
+else
+  echo "Adding sho to sudoers ..."
+  echo "
+  sho ALL=(root) $(which yum)
+  sho ALL=(root) $(which git)
+  sho ALL=(root) $(which systemctl)
+  " >> /etc/sudoers
+fi
 
 echo "(add_user) Done"

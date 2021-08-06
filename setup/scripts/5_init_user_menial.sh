@@ -16,10 +16,14 @@ fi
 echo "Modifying sho's commands ..."
 chmod +x src/commands/sho/*
 
-echo "Adding permissions to user(menial) ..."
-for command in src/commands/sho/*; do
-  echo "menial ALL=(sho) $OPS_DIR/$command" >> /etc/sudoers
-done
+if grep "menial ALL=(root)" < /etc/sudoers; then
+  echo "Skipping adding menial to sudoers ..."
+else
+  echo "Adding permissions to user(menial) ..."
+  for command in src/commands/sho/*; do
+    echo "menial ALL=(sho) $OPS_DIR/$command" >> /etc/sudoers
+  done
+fi
 
 cd /home/menial
 
