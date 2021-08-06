@@ -29,9 +29,9 @@ if grep "sho ALL=(root)" < /etc/sudoers; then
 else
   echo "Adding sho to sudoers ..."
   echo "
-  sho ALL=(root) $(which yum)
-  sho ALL=(root) $(which git)
-  sho ALL=(root) $(which systemctl)
+sho ALL=(root) $(which yum)
+sho ALL=(root) $(which git)
+sho ALL=(root) $(which systemctl)
   " >> /etc/sudoers
 fi
 
