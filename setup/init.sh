@@ -13,7 +13,6 @@ done < setup/constants.env
 
 sh setup/scripts/2_add_user.sh
 sh setup/scripts/3_install_deps.sh
-sh setup/scripts/4_fetch_git_repo.sh
 sh setup/scripts/5_init_user_menial.sh
 
 sh /ops/src/docker/setup.sh
