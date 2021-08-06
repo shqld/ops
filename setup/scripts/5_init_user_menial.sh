@@ -21,7 +21,7 @@ if grep "menial ALL=(root)" < /etc/sudoers; then
 else
   echo "Adding permissions to user(menial) ..."
   for command in src/commands/sho/*; do
-    echo "menial ALL=(sho) $OPS_DIR/$command" >> /etc/sudoers
+    echo "menial ALL=(ALL) NOPASSWD: $OPS_DIR/$command" >> /etc/sudoers
   done
 fi
 
