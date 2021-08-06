@@ -7,7 +7,9 @@ echo "(setup/init) Starting ..."
 cd ~
 
 echo "Exporting constants as environment variables ..."
-export "$(xargs < setup/constants.env)"
+while read -r env ; do
+  export ${env?}
+done < setup/constants.env
 
 sh setup/scripts/2_add_user.sh
 sh setup/scripts/3_install_deps.sh
