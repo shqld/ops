@@ -10,10 +10,21 @@ jobs:
         steps:
             - name: Checkout
               uses: actions/checkout@v2
-            - name: Executing remote ssh commands
+            - name: Archive files
+              run: |
+                  tar -c $(ls) > ops.tar
+            - name: Copy shqld/ops/src to remote
+              uses: appleboy/scp-action@master
+              with:
+                  host: ${{ secrets.MENIAL_HOST }}
+                  username: ${{ secrets.MENIAL_USERNAME }}
+                  key: ${{ secrets.MENIAL_TOKEN }}
+                  source: 'ops.tar'
+                  target: '~'
+            - name: Extracting tar to /ops
               uses: appleboy/ssh-action@master
               with:
                   host: ${{ secrets.MENIAL_HOST }}
                   username: ${{ secrets.MENIAL_USERNAME }}
                   key: ${{ secrets.MENIAL_TOKEN }}
-                  script: 'sudo /ops/src/commands/sho/docker-pull'
+                  script: 'tar -xf - < ops.tar && src/commands/sho/update-ops && rm -rf *'

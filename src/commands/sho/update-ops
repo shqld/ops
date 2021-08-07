@@ -1,0 +1,4 @@
+set -eu
+
+rm -rf /ops
+mv /home/menial/* /ops/
