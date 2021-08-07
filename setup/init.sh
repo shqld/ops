@@ -4,7 +4,7 @@ set -eu
 
 echo "(setup/init) Starting ..."
 
-cd ~
+cd /ops
 
 echo "Exporting constants as environment variables ..."
 while read -r env ; do
@@ -15,7 +15,7 @@ sh setup/scripts/2_add_user.sh
 sh setup/scripts/3_install_deps.sh
 sh setup/scripts/5_init_user_menial.sh
 
-sh /ops/src/docker/setup.sh
+sh src/docker/setup.sh
 
 rm -r setup
 

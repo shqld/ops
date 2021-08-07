@@ -2,7 +2,7 @@
 
 set -eu
 
-cd ~/setup
+cd /ops
 
 echo "Updating yum registry ..."
 yum update -y

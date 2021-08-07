@@ -4,7 +4,7 @@ set -eu
 
 echo "(add_user) Starting ..."
 
-cd ~/setup
+cd /ops
 
 if grep sho < /etc/group; then
   echo "Skipping adding user(sho) ..."

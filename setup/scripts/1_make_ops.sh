@@ -2,7 +2,10 @@
 
 set -eu
 
+cd /ops
+
 groupadd ops
 
-mkdir /ops
-chown sho -R /ops
+chown sho -R .
+chgrp ops -R .
+chmod g+rwx -R .

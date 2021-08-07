@@ -28,16 +28,14 @@ else
   done
 fi
 
-cd /home/menial
-
 echo "Setting ssh config ..."
 if [ ! -d .ssh ]; then
   mkdir .ssh
   chmod 700 .ssh
 fi
-echo $AUTHORIZED_KEY_MENIAL > .ssh/authorized_keys
-chmod 600 .ssh/authorized_keys
-chown menial -R .ssh
+echo $AUTHORIZED_KEY_MENIAL > /home/menial/.ssh/authorized_keys
+chmod 600 /home/menial/.ssh/authorized_keys
+chown menial -R /home/menial/.ssh
 
 echo "
 Match User menial
