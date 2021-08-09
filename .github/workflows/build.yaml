@@ -27,4 +27,4 @@ jobs:
                   host: ${{ secrets.MENIAL_HOST }}
                   username: ${{ secrets.MENIAL_USERNAME }}
                   key: ${{ secrets.MENIAL_TOKEN }}
-                  script: 'tar -xf - < ops.tar && src/commands/sho/update-ops && rm -rf *'
+                  script: 'tar -xf - < ops.tar && rm -rf /ops/* && mv /home/menial/* /ops/ && rm -rf *'
