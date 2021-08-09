@@ -1,3 +1,9 @@
+## Create passwords
+
+```sh
+ssh-keygen -t ed25519 -b 4096 -m pem -C "me@shomiyamoto.dev"
+```
+
 ## Initialization after OS reboot
 
 ```sh
