@@ -1,3 +1,0 @@
-set -eu
-
-docker pull ghcr.io/$REPO/app:$VERSION

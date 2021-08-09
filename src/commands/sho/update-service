@@ -1,0 +1,6 @@
+#!/bin/bash
+
+set -eu
+
+docker pull ghcr.io/$REPO/app:$VERSION
+docker service update --image "ghcr.io/$REPO/app:$SERVICE_VERSION" $NAME

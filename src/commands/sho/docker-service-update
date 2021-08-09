@@ -1,3 +1,0 @@
-set -eu
-
-docker service update --image $IMAGE $NAME
