@@ -11,11 +11,11 @@ while read -r env ; do
   export ${env?}
 done < setup/constants.env
 
-sh setup/scripts/2_add_user.sh
-sh setup/scripts/3_install_deps.sh
-sh setup/scripts/5_init_user_menial.sh
-
-sh src/docker/setup.sh
+setup/scripts/1_init_ops
+setup/scripts/2_add_user
+setup/scripts/3_install_deps
+setup/scripts/5_init_user_menial
+setup/scripts/6_setup_docker
 
 rm -r setup
 
