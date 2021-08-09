@@ -13,7 +13,8 @@ else
   useradd menial
 fi
 
-echo "Adding user(menial) to group(ops) ..."
+echo "Adding user(menial) to group(docker, ops) ..."
+usermod -a -G docker menial
 usermod -a -G ops menial
 
 echo "Modifying sho's commands ..."
