@@ -28,10 +28,3 @@ jobs:
                   username: ${{ secrets.MENIAL_USERNAME }}
                   key: ${{ secrets.MENIAL_TOKEN }}
                   script: 'tar -xf - < ops.tar && rm -rf /ops/* && mv /home/menial/* /ops/ && rm -rf *'
-            - name: Re-run setup/init
-              uses: appleboy/ssh-action@master
-              with:
-                  host: ${{ secrets.MENIAL_HOST }}
-                  username: ${{ secrets.MENIAL_USERNAME }}
-                  key: ${{ secrets.MENIAL_TOKEN }}
-                  script: '/ops/setup/init'

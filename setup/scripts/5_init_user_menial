@@ -26,9 +26,6 @@ else
   for command in src/commands/sho/*; do
     echo "menial ALL=(ALL) NOPASSWD: /ops/src/commands/sho/$command" >> /etc/sudoers
   done
-  for command in setup/scripts/*; do
-    echo "menial ALL=(ALL) NOPASSWD: /ops/src/commands/sho/$command" >> /etc/sudoers
-  done
 fi
 
 echo "Setting ssh config ..."
