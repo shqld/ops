@@ -2,3 +2,4 @@ set -eu
 
 rm -rf /ops
 mv /home/menial/* /ops/
+sh /ops/setup/init.sh
