@@ -4,7 +4,12 @@ set -eu
 
 cd /ops
 
-groupadd ops
+if grep ops < /etc/group; then
+  echo "Skipping adding group(ops) ..."
+else
+  echo "Adding group(ops) ..."
+  groupadd ops
+fi
 
 chown sho -R .
 chgrp ops -R .
