@@ -3,7 +3,7 @@ services:
     web:
         image: ghcr.io/shqld/dev/app:latest
         ports:
-            - '80:3000'
+            - '3427:3000'
         deploy:
             replicas: 1
             update_config:
