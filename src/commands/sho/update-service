@@ -3,5 +3,5 @@
 set -eu
 
 echo $GITHUB_PACKAGE_SHQLD_TOKEN | docker login -u shqld --password-stdin ghcr.io
-docker pull ghcr.io/$REPO/app:$VERSION
-docker service update --image "ghcr.io/$REPO/app:$VERSION" $NAME
+docker pull "$IMAGE"
+docker service update --image "$IMAGE" $NAME
