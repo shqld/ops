@@ -9,3 +9,7 @@ yum update -y
 
 echo "Installing packages ..."
 yum install -y jq zsh
+
+echo "Installing certbot ..."
+rpm -ivh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+yum install certbot
