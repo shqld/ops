@@ -14,6 +14,21 @@ else
   echo $USER_PASSWD_SHO | passwd sho --stdin
 fi
 
+mkdir -p /home/sho/.ssh
+curl https://github.com/shqld.keys > /home/sho/.ssh/authorized_keys
+chmod 600 /home/sho/.ssh/authorized_keys
+chown sho -R /home/sho/.ssh
+
+if ! grep "Match User sho" < /etc/ssh/sshd_config; then
+  echo "
+Match User sho
+  PasswordAuthentication no
+  PubkeyAuthentication yes
+  AuthorizedKeysFile /home/sho/.ssh/authorized_keys
+  " >> /etc/ssh/sshd_config
+  systemctl restart sshd
+fi
+
 if grep docker < /etc/group; then
   echo "Skipping adding group(docker) ..."
 else
