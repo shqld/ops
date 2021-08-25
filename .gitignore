@@ -1,3 +1,5 @@
 .env
 setup/.ssh/*
 !setup/.ssh/config
+logs/*
+!logs/.gitkeep
