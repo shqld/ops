@@ -1,0 +1,65 @@
+#! /bin/sh
+
+set -eu
+
+# -----------------------------------------------
+
+if ! getent passwd robot; then
+  echo "Adding user(robot) ..."
+  useradd robot
+fi
+
+# if getent group sho; then
+#   echo "Adding user(robot) to group(sho) ..."
+#   usermod -a -G sho robot
+# fi
+
+# -----------------------------------------------
+
+echo "Setting up ssh authorization for user(robot) ..."
+
+mkdir -p /home/robot/.ssh
+echo "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH/YgNZJbJbyKwUG7k3i7PfdJ59CyDpSTArn/rJ/4J5I robot@shqld.dev" > /home/robot/.ssh/authorized_keys
+chmod 600 /home/robot/.ssh/authorized_keys
+chmod 700 /home/robot/.ssh
+chown robot -R /home/robot/.ssh
+
+temp=$(mktemp)
+cp /etc/ssh/sshd_config $temp
+sed -ze "s/# ---robot---.*# ---robot---//" < $temp > /etc/ssh/sshd_config
+rm $temp
+echo "
+# ---robot---
+Match User robot
+  PasswordAuthentication no
+  PubkeyAuthentication yes
+  AuthorizedKeysFile /home/robot/.ssh/authorized_keys
+# ---robot---
+" >> /etc/ssh/sshd_config
+
+systemctl restart sshd
+
+# -----------------------------------------------
+
+echo "Setting up sudoers for user(robot) ..."
+
+if ! grep -q '# ---robot---' < /etc/sudoers; then
+  printf '# ---robot---\n# ---robot---' >> /etc/sudoers
+fi
+echo "Adding permissions to user(robot) ..."
+temp1=$(mktemp)
+  echo $temp1
+  for command in /ops/users/robot/commands/*; do
+    echo "robot ALL=(sho) NOPASSWD: $command" >> $temp1
+  done
+
+  temp2=$(mktemp)
+  cp /etc/sudoers $temp2
+  sed -ze "s/# ---robot---.*# ---robot---//" < $temp2 > /etc/sudoers
+  rm $temp2
+  echo "
+# ---robot---
+$(cat $temp1)
+# ---robot---
+" >> /etc/sudoers
+rm $temp1

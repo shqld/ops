@@ -1,22 +1,14 @@
-#!/bin/bash
+#!/bin/sh
 
 set -eu
 
-echo "(setup/init) Starting ..."
+# -----------------------------------------------
 
-cd /ops
+/ops/users/sho/setup
+/ops/users/robot/setup
 
-echo "Exporting constants as environment variables ..."
-while read -r env ; do
-  export ${env?}
-done < setup/constants.env
+/ops/setup/scripts/install_packages
+/ops/setup/scripts/setup_docker
+/ops/setup/scripts/setup_ipv6
 
-setup/scripts/1_init_ops
-setup/scripts/2_add_user
-setup/scripts/3_install_deps
-setup/scripts/5_init_user_robot
-setup/scripts/6_setup_docker
-
-rm -r setup
-
-echo "(setup/init) Done"
+echo "All setup is done"

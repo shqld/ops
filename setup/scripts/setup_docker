@@ -1,10 +1,11 @@
-#!/bin/bash
+#! /bin/sh
 
 set -eu
 
-cd /ops/src
+# -----------------------------------------------
 
 echo "Installing docker ..."
+
 yum install -y yum-utils 
 yum-config-manager -y \
   --add-repo \
@@ -15,16 +16,16 @@ yum install -y docker-ce docker-ce-cli containerd.io
 curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 chmod +x /usr/local/bin/docker-compose
 
-echo "Setting docker as daemon ..."
+# -----------------------------------------------
+
+echo "Enabling docker as daemon ..."
 systemctl enable docker
 
 echo "Starting docker ..."
 systemctl start docker
 
-echo "Logging in to ghcr.io ..."
-echo $GITHUB_PACKAGE_SHQLD_TOKEN | docker login -u shqld --password-stdin ghcr.io
-
-echo "Starting docker swarm ..."
+echo "Starting docker swarm mode ..."
 docker swarm init || echo "docker swarm has already been started"
 
-REPO=shqld/dev STACK_NAME=shqld-dev VERSION=latest sh docker/create_stack.sh
+# echo "Logging in to ghcr.io ..."
+# echo $GITHUB_PACKAGE_SHQLD_TOKEN | docker login -u shqld --password-stdin ghcr.io

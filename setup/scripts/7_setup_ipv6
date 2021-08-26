@@ -1,9 +1,0 @@
-#! /bin/bash
-
-# https://manual.sakura.ad.jp/vps/network/ipv6/centos8.html
-
-sed -i -e "/net.ipv6.conf.default.disable_ipv6/s/^/#/" /etc/sysctl.conf
-sed -i -e "/net.ipv6.conf.all.disable_ipv6/s/^/#/" /etc/sysctl.conf
-
-sed -i -e "s/^#//g" /etc/sysconfig/network
-sed -i -e "s/^#//g" /etc/sysconfig/network-scripts/ifcfg-ens3
