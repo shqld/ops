@@ -14,7 +14,7 @@ done < setup/constants.env
 setup/scripts/1_init_ops
 setup/scripts/2_add_user
 setup/scripts/3_install_deps
-setup/scripts/5_init_user_menial
+setup/scripts/5_init_user_robot
 setup/scripts/6_setup_docker
 
 rm -r setup

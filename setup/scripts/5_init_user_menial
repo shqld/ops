@@ -4,28 +4,28 @@ set -eu
 
 cd /ops
 
-echo "(add_user_menial) Starting ..."
+echo "(add_user_robot) Starting ..."
 
-if grep menial < /etc/group; then
-  echo "Skipping adding user(menial) ..."
+if grep robot < /etc/group; then
+  echo "Skipping adding user(robot) ..."
 else
-  echo "Adding user(menial) ..."
-  useradd menial
+  echo "Adding user(robot) ..."
+  useradd robot
 fi
 
-echo "Adding user(menial) to group(docker, ops) ..."
-usermod -a -G docker menial
-usermod -a -G ops menial
+echo "Adding user(robot) to group(docker, ops) ..."
+usermod -a -G docker robot
+usermod -a -G ops robot
 
 echo "Modifying sho's commands ..."
 chmod +x src/commands/sho/*
 
-if grep "menial ALL=(root)" < /etc/sudoers; then
-  echo "Skipping adding menial to sudoers ..."
+if grep "robot ALL=(root)" < /etc/sudoers; then
+  echo "Skipping adding robot to sudoers ..."
 else
-  echo "Adding permissions to user(menial) ..."
+  echo "Adding permissions to user(robot) ..."
   for command in src/commands/sho/*; do
-    echo "menial ALL=(ALL) NOPASSWD: /ops/src/commands/sho/$command" >> /etc/sudoers
+    echo "robot ALL=(ALL) NOPASSWD: /ops/src/commands/sho/$command" >> /etc/sudoers
   done
 fi
 
@@ -34,15 +34,15 @@ if [ ! -d .ssh ]; then
   mkdir .ssh
   chmod 700 .ssh
 fi
-echo $AUTHORIZED_KEY_MENIAL > /home/menial/.ssh/authorized_keys
-chmod 600 /home/menial/.ssh/authorized_keys
-chown menial -R /home/menial/.ssh
+echo $AUTHORIZED_KEY_ROBOT > /home/robot/.ssh/authorized_keys
+chmod 600 /home/robot/.ssh/authorized_keys
+chown robot -R /home/robot/.ssh
 
 echo "
-Match User menial
+Match User robot
   PasswordAuthentication no
   PubkeyAuthentication yes
-  AuthorizedKeysFile /home/menial/.ssh/authorized_keys
+  AuthorizedKeysFile /home/robot/.ssh/authorized_keys
 " >> /etc/ssh/sshd_config
 
-echo "(add_user_menial) Done"
+echo "(add_user_robot) Done"
