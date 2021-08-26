@@ -12,4 +12,8 @@ yum install -y jq zsh
 
 echo "Installing certbot ..."
 rpm -ivh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-yum install certbot nginx
+yum install certbot
+
+dnf install -y epel-release
+dnf copr enable -y ryoh/nginx-quic
+dnf install -y nginx-quic
