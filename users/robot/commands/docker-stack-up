@@ -1,7 +1,3 @@
-#!/bin/sh
+#! /bin/sh
 
-set -eu
-
-cd /ops/src
-
-docker stack up --compose-file config/$REPO.docker-compose.yaml $NAME
+docker stack up "$@"
