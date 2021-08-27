@@ -5,26 +5,16 @@ on:
             - main
 
 jobs:
-    echo-test:
+    update-remote:
         runs-on: ubuntu-latest
         steps:
-            - name: Checkout
-              uses: actions/checkout@v2
-            - name: Archive files
-              run: |
-                  tar -c $(ls) > ops.tar
-            - name: Copy shqld/ops/src to remote
-              uses: appleboy/scp-action@master
-              with:
-                  host: ${{ secrets.ROBOT_HOST }}
-                  username: ${{ secrets.ROBOT_USERNAME }}
-                  key: ${{ secrets.ROBOT_TOKEN }}
-                  source: 'ops.tar'
-                  target: '~'
-            - name: Extracting tar to /ops
+            - name: Update /ops
               uses: appleboy/ssh-action@master
               with:
-                  host: ${{ secrets.ROBOT_HOST }}
-                  username: ${{ secrets.ROBOT_USERNAME }}
-                  key: ${{ secrets.ROBOT_TOKEN }}
-                  script: 'tar -xf - < ops.tar && rm -rf /ops/* && mv /home/robot/* /ops/ && rm -rf *'
+                  host: shqld.dev
+                  username: robot
+                  key: ${{ secrets.ROBOT_PRIVATE_KEY }}
+                  script: |
+                      sudo rm -rf /ops \
+                      && sudo git clone https://github.com/shqld/ops.git /ops --depth 1 \
+                      && sudo make -C /ops setup > /dev/null

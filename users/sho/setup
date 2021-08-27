@@ -18,8 +18,6 @@ echo "Setting /ops owner to user&group(sho) ..."
 
 chown sho -R /ops
 chmod u+rwx -R /ops
-chgrp sho -R /ops
-chmod g+r -R /ops
 
 # -----------------------------------------------
 
@@ -31,33 +29,12 @@ chmod 600 /home/sho/.ssh/authorized_keys
 chmod 700 /home/sho/.ssh
 chown sho -R /home/sho/.ssh
 
-temp=$(mktemp)
-cp /etc/ssh/sshd_config $temp
-sed -ze "s/# ---sho---.*# ---sho---//" < $temp > /etc/ssh/sshd_config
-rm $temp
-echo "
-# ---sho---
-Match User sho
-  PasswordAuthentication no
-  PubkeyAuthentication yes
-  AuthorizedKeysFile /home/sho/.ssh/authorized_keys
-# ---sho---
-" >> /etc/ssh/sshd_config
-
-systemctl restart sshd
-
 # -----------------------------------------------
 
 echo "Setting up sudoers for user(sho) ..."
 
-temp=$(mktemp)
-cp /etc/sudoers $temp
-sed -ze "s/# ---sho---.*# ---sho---//" < $temp > /etc/sudoers
-rm $temp
 echo "
-# ---sho---
 sho ALL=(root) $(which yum)
 sho ALL=(root) $(which git)
 sho ALL=(root) $(which systemctl)
-# ---sho---
-" >> /etc/sudoers
+" > /etc/sudoers.d/sho
