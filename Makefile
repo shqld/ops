@@ -7,6 +7,10 @@ update:
 	rm -rf /ops
 	git clone https://github.com/shqld/ops /ops
 
+.PHONY: deploy-daemon
+deploy-daemon:
+	docker stack deploy --compose-file /ops/daemon/docker-compose.yaml daemon
+
 .PHONY: issue-cert
 issue-cert:
 	docker run -it --rm \
