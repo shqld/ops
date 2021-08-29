@@ -1,0 +1,23 @@
+version: '3.8'
+services:
+    nodejs:
+        image: ghcr.io/shqld/dev/web:latest
+        ports:
+            - '3000:3000'
+        environment:
+            - 'SOCKET_PATH=/var/lib/nginx/www_nodejs.sock'
+        volumes:
+            - '/var/lib/nginx/www_nodejs.sock:/var/lib/nginx/www_nodejs.sock'
+        deploy:
+            replicas: 1
+            # update_config:
+            #     parallelism: 2
+            #     order: start-first
+            #     failure_action: rollback
+            # rollback_config:
+            #     parallelism: 0
+            #     order: stop-first
+            # restart_policy:
+            #     condition: any
+            #     max_attempts: 3
+            #     window: 120s

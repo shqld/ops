@@ -11,6 +11,10 @@ update:
 deploy-daemon:
 	docker stack deploy --compose-file /ops/daemon/docker-compose.yaml daemon
 
+.PHONY: deploy-%
+deploy-%:
+	make -C /ops/services "deploy-${@:deploy-%=%}"
+
 .PHONY: issue-cert
 issue-cert:
 	docker run -it --rm \
