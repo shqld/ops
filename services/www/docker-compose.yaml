@@ -5,9 +5,9 @@ services:
         ports:
             - '3000:3000'
         environment:
-            - 'SOCKET_PATH=/var/lib/nginx/www_nodejs.sock'
+            - 'SOCKET_PATH=/run/shqld/www_nodejs.sock'
         volumes:
-            - '/var/lib/nginx/www_nodejs.sock:/var/lib/nginx/www_nodejs.sock'
+            - '/run/shqld:/run/shqld'
         deploy:
             replicas: 1
             # update_config:
