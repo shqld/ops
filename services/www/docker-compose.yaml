@@ -7,7 +7,7 @@ services:
         environment:
             - 'SOCKET_PATH=/run/shqld/www_nodejs.sock'
         volumes:
-            - '/run/shqld:/run/shqld'
+            - 'www:/run/shqld'
         user: '${CONTAINER_UID}'
         deploy:
             replicas: 1
@@ -22,3 +22,6 @@ services:
             #     condition: any
             #     max_attempts: 3
             #     window: 120s
+
+volumes:
+    www:
