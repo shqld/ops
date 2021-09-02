@@ -1,0 +1,14 @@
+#! /bin/sh
+
+set -eu
+
+if ! id -u app; then
+  echo "Adding user(app) ..."
+  useradd app
+fi
+
+# -----------------------------------------------
+
+echo "Setting up sudoers for user(app) ..."
+
+setfacl -m u:app:rwx /run/shqld

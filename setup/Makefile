@@ -24,7 +24,7 @@ setup_ipv6:
 	/ops/setup/scripts/setup_ipv6
 
 .PHONY: setup_user
-setup_user: setup_user_sho setup_user_robot
+setup_user: setup_user_sho setup_user_robot setup_user_daemon setup_user_app
 
 .PHONY: setup_user_sho
 setup_user_sho: setup_sshd
@@ -33,3 +33,11 @@ setup_user_sho: setup_sshd
 .PHONY: setup_user_robot
 setup_user_robot: setup_sshd
 	/ops/users/robot/setup
+
+.PHONY: setup_user_daemon
+setup_user_daemon: setup_sshd
+	/ops/users/daemon/setup
+
+.PHONY: setup_user_app
+setup_user_app: setup_sshd
+	/ops/users/app/setup
