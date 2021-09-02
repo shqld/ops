@@ -8,6 +8,7 @@ services:
             - 'SOCKET_PATH=/run/shqld/www_nodejs.sock'
         volumes:
             - '/run/shqld:/run/shqld'
+        user: '${CONTAINER_UID}'
         deploy:
             replicas: 1
             # update_config:

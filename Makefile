@@ -9,6 +9,8 @@ update:
 
 .PHONY: deploy-daemon
 deploy-daemon:
+	@set -eu
+	@export CONTAINER_UID=$(id -u daemon)
 	docker stack deploy --compose-file /ops/daemon/docker-compose.yaml daemon
 
 .PHONY: deploy-%
