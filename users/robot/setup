@@ -32,5 +32,5 @@ robot ALL=(root) NOPASSWD: $(which rm) -rf /ops
 robot ALL=(root) NOPASSWD: $(which git) clone *
 
 robot ALL=(root) NOPASSWD: $(which make) -C /ops setup
-robot ALL=(root) NOPASSWD: $(which make) -C /ops deploy-www
+robot ALL=(root) NOPASSWD: $(which make) -C /ops app-update-www
 " > /etc/sudoers.d/robot

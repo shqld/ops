@@ -7,15 +7,9 @@ update:
 	rm -rf /ops
 	git clone https://github.com/shqld/ops /ops
 
-.PHONY: deploy-daemon
-deploy-daemon:
-	@set -eu
-	@export CONTAINER_UID=$(id -u daemon)
-	docker stack deploy --compose-file /ops/daemon/docker-compose.yaml daemon
-
-.PHONY: deploy-%
-deploy-%:
-	make -C /ops/services "deploy-${@:deploy-%=%}"
+.PHONY: app-%
+app-%:
+	make -C /ops/app "${@:app-%=%}"
 
 .PHONY: issue-cert
 issue-cert:
