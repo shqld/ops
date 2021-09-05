@@ -3,8 +3,8 @@ services:
     gateway:
         image: cdrocker/nginx:latest
         ports:
-            - '443:443/tcp'
-            - '443:443/udp'
+            - '8443:443/tcp'
+            - '8443:443/udp'
         networks:
             - www
         volumes:
