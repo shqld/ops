@@ -6,9 +6,3 @@ if ! id -u daemon; then
   echo "Adding user(daemon) ..."
   useradd daemon
 fi
-
-# -----------------------------------------------
-
-echo "Setting up sudoers for user(daemon) ..."
-
-setfacl -m u:daemon:rwx /run/shqld
