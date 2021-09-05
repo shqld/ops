@@ -1,8 +1,0 @@
-#! /bin/sh
-
-set -eu
-
-if ! id -u app; then
-  echo "Adding user(app) ..."
-  useradd app
-fi

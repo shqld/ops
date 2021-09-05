@@ -1,0 +1,3 @@
+sho ALL=(root) $(which yum)
+sho ALL=(root) $(which git)
+sho ALL=(root) $(which systemctl)

@@ -1,0 +1,116 @@
+version: '3'
+
+tasks:
+    default:
+        deps:
+            - sho
+            - robot
+            - daemon
+            - app
+
+    sho:
+        cmds:
+            - task: sho_add_user
+            - task: sho_add_user_to_group
+            - task: sho_change_ownership_of_ops
+            - task: sho_init_ssh
+            - task: sho_init_sudoers
+
+    robot:
+        cmds:
+            - task: robot_add_user
+            - task: robot_init_ssh
+            - task: robot_init_sudoers
+
+    sho_add_user:
+        desc: Add user(sho)
+        status:
+            - id -u sho
+        cmds:
+            - useradd sho
+
+    sho_add_user_to_group:
+        desc: Add user(sho) to group(docker)
+        deps:
+            - sho_add_user
+        status:
+            - id -g docker
+        cmds:
+            - usermod -a -G docker sho
+
+    sho_change_ownership_of_ops:
+        desc: Set /ops owner to user&group(sho)"
+        deps:
+            - sho_add_user
+        cmds:
+            - chown sho -R /ops
+            - chmod u+rwx -R /ops
+
+    sho_init_ssh:
+        desc: Set up ssh authorization for user(sho)
+        deps:
+            - sho_add_user
+        status:
+            - test -d /home/sho/.ssh
+            - test -f /home/sho/.ssh/authorized_keys
+        cmds:
+            - mkdir -p /home/sho/.ssh
+            - curl https://github.com/shqld.keys > /home/sho/.ssh/authorized_keys
+            - chmod 600 /home/sho/.ssh/authorized_keys
+            - chmod 700 /home/sho/.ssh
+            - chown sho -R /home/sho/.ssh
+
+    sho_init_sudoers:
+        desc: Set up sudoers for user(sho)
+        deps:
+            - sho_add_user
+        status:
+            - test -f /etc/sudoers.d/sho
+        cmds:
+            - ln -sf /ops/users/sho/sudoers /etc/sudoers.d/sho
+
+    robot_add_user:
+        desc: Add user(robot)
+        status:
+            - id -u robot
+        cmds:
+            - useradd robot
+
+    robot_init_ssh:
+        desc: Set up ssh authorization for user(robot)
+        deps:
+            - robot_add_user
+        status:
+            - test -d /home/robot/.ssh
+            - test -f /home/robot/.ssh/authorized_keys
+        sources:
+            - ./id.pub
+        cmds:
+            - mkdir -p /home/robot/.ssh
+            - cat ./id.pub > /home/robot/.ssh/authorized_keys
+            - chmod 600 /home/robot/.ssh/authorized_keys
+            - chmod 700 /home/robot/.ssh
+            - chown robot -R /home/robot/.ssh
+
+    robot_init_sudoers:
+        desc: Set up sudoers for user(robot)
+        deps:
+            - robot_add_user
+        status:
+            - test -f /etc/sudoers.d/robot
+        cmds:
+            - ln -sf /ops/users/robot/sudoers /etc/sudoers.d/robot
+
+    daemon_add_user:
+        desc: Add user(daemon)
+        status:
+            - id -u daemon
+        cmds:
+            - useradd daemon
+
+    app_add_user:
+        desc: Add user(app)
+        status:
+            - id -u app
+        cmds:
+            - useradd app
