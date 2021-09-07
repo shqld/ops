@@ -1,7 +1,6 @@
 .PHONY: setup
 setup:
-	sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin
-	/usr/local/bin/task -d /ops setup
+	make -C /ops/setup
 
 .PHONY: update
 update:

@@ -1,0 +1,36 @@
+#! /bin/sh
+
+set -eu
+
+# -----------------------------------------------
+
+if ! getent passwd robot; then
+  echo "Adding user(robot) ..."
+  useradd robot
+fi
+
+echo "Adding user(robot) to group(sho) ..."
+usermod -a -G sho robot
+
+# -----------------------------------------------
+
+echo "Setting up ssh authorization for user(robot) ..."
+
+mkdir -p /home/robot/.ssh
+echo "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH/YgNZJbJbyKwUG7k3i7PfdJ59CyDpSTArn/rJ/4J5I robot@shqld.dev" > /home/robot/.ssh/authorized_keys
+chmod 600 /home/robot/.ssh/authorized_keys
+chmod 700 /home/robot/.ssh
+chown robot -R /home/robot/.ssh
+
+# -----------------------------------------------
+
+echo "Setting up sudoers for user(robot) ..."
+
+echo "
+# For replacing /ops
+robot ALL=(root) NOPASSWD: $(which rm) -rf /ops
+robot ALL=(root) NOPASSWD: $(which git) clone *
+
+robot ALL=(root) NOPASSWD: $(which make) -C /ops setup
+robot ALL=(root) NOPASSWD: $(which make) -C /ops app-update-www
+" > /etc/sudoers.d/robot
