@@ -6,7 +6,7 @@ services:
             - '8443:443/tcp'
             - '8443:443/udp'
         networks:
-            - gateway
+            - www
         volumes:
             - /ops/app/gateway/nginx.conf:/etc/nginx/nginx.conf
             - /etc/letsencrypt:/etc/letsencrypt
@@ -14,28 +14,18 @@ services:
         deploy:
             replicas: 1
 
-    varnish:
-        image: varnish:fresh-alpine
-        networks:
-            - gateway
-            - varnish
-        volumes:
-            - /ops/app/varnish/
-
     www:
         image: ghcr.io/shqld/dev/web:latest
         networks:
-            - varnish
+            - www
         user: '${CONTAINER_UID}'
         depends_on:
             - gateway
-            - varnish
         deploy:
             replicas: 1
 
 networks:
-    gateway:
-    varnish:
+    www:
 
         # update_config:
         #     parallelism: 2
