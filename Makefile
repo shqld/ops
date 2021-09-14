@@ -1,3 +1,5 @@
+DOCKER_CONFIG_PATH = "$HOME/.docker/config.json"
+
 .PHONY: setup
 setup:
 	make -C /ops/setup
@@ -10,6 +12,15 @@ update:
 .PHONY: app-%
 app-%:
 	make -C /ops/app "${@:app-%=%}"
+
+.PHONY: update-gateway
+update-gateway:
+	@set -eu
+	@grep 'ghcr.io' < $(DOCKER_CONFIG_PATH) || \
+		echo "${DOCKER_REGISTRY_TOKEN}" | docker login -u shqld --password-stdin ghcr.io
+	@export CONTAINER_UID=$(id -u app)
+	docker-compose -f /ops/gateway/docker-compose.yaml pull
+	docker stack up gateway --compose-file /ops/gateway/docker-compose.yaml --prune
 
 .PHONY: issue-cert
 issue-cert:

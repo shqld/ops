@@ -1,31 +1,17 @@
 version: '3.8'
 services:
-    gateway:
-        image: cdrocker/nginx:latest
-        ports:
-            - '8443:443/tcp'
-            - '8443:443/udp'
-        networks:
-            - www
-        volumes:
-            - /ops/app/gateway/nginx.conf:/etc/nginx/nginx.conf
-            - /etc/letsencrypt:/etc/letsencrypt
-        user: '${CONTAINER_UID}'
-        deploy:
-            replicas: 1
-
     www:
         image: ghcr.io/shqld/dev/web:latest
         networks:
-            - www
-        user: '${CONTAINER_UID}'
-        depends_on:
             - gateway
+        user: '${CONTAINER_UID}'
         deploy:
             replicas: 1
 
 networks:
-    www:
+    gateway:
+        name: gateway
+        external: true
 
         # update_config:
         #     parallelism: 2

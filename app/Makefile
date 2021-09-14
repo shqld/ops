@@ -7,7 +7,7 @@ update-all:
 		echo "${DOCKER_REGISTRY_TOKEN}" | docker login -u shqld --password-stdin ghcr.io
 	@export CONTAINER_UID=$(id -u app)
 	docker-compose -f /ops/app/docker-compose.yaml pull
-	docker stack up shqld --compose-file /ops/app/docker-compose.yaml --prune
+	docker stack up app --compose-file /ops/app/docker-compose.yaml --prune
 
 .PHONY: update-%
 update-%:
@@ -15,4 +15,4 @@ update-%:
 	@grep 'ghcr.io' < $(DOCKER_CONFIG_PATH) || \
 		echo "${DOCKER_REGISTRY_TOKEN}" | docker login -u shqld --password-stdin ghcr.io
 	@export CONTAINER_UID=$(id -u app)
-	docker service update "shqld_${@:update-%=%}" --with-registry-auth --force
+	docker service update "app_${@:update-%=%}" --with-registry-auth --force
