@@ -1,0 +1,7 @@
+DAEMON_OPTS="\
+  -F \
+  -a gateway:80 \
+  -f /etc/varnish/default.vcl \
+  -S /etc/varnish/secret \
+  -s malloc,256m \
+"
