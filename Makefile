@@ -13,14 +13,21 @@ update:
 app-%:
 	make -C /ops/app "${@:app-%=%}"
 
-.PHONY: update-gateway
-update-gateway:
-	@set -eu
-	@grep 'ghcr.io' < $(DOCKER_CONFIG_PATH) || \
-		echo "${DOCKER_REGISTRY_TOKEN}" | docker login -u shqld --password-stdin ghcr.io
-	@export CONTAINER_UID=$(id -u app)
-	docker-compose -f /ops/gateway/docker-compose.yaml pull
-	docker-compose -f /ops/gateway/docker-compose.yaml up -d
+.PHONY: update-nginx
+update-nginx:
+	if ! which nginx; then
+		# https://copr.fedorainfracloud.org/coprs/ryoh/nginx-quic/
+		dnf install -y epel-release
+		dnf copr enable -y ryoh/nginx-quic
+		dnf install -y nginx-quic
+
+		systemctl enable nginx
+	fi
+	if ! systemctl | grep nginx -q; then
+		nginx -t
+		ln -sfnv /ops/system/nginx/nginx.conf /etc/nginx/nginx.conf
+		systemctl start nginx
+	fi
 
 .PHONY: issue-cert
 issue-cert:

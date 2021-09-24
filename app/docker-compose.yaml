@@ -2,16 +2,11 @@ version: '3.8'
 services:
     www:
         image: ghcr.io/shqld/dev/web:latest
-        networks:
-            - gateway
+        ports:
+            - "3000:3000"
         user: '${CONTAINER_UID}'
         deploy:
             replicas: 1
-
-networks:
-    gateway:
-        name: gateway
-        external: true
 
         # update_config:
         #     parallelism: 2

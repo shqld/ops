@@ -6,4 +6,4 @@ echo "Updating yum registry ..."
 yum update -y
 
 echo "Installing packages ..."
-yum install -y jq zsh
+yum install -y jq zsh lsof
