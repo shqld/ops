@@ -23,9 +23,3 @@ systemctl enable docker
 
 echo "Starting docker ..."
 systemctl start docker
-
-echo "Starting docker swarm mode ..."
-docker swarm init || echo "docker swarm has already been started"
-
-# echo "Logging in to ghcr.io ..."
-# echo $GITHUB_PACKAGE_SHQLD_TOKEN | docker login -u shqld --password-stdin ghcr.io

@@ -20,7 +20,7 @@ update-gateway:
 		echo "${DOCKER_REGISTRY_TOKEN}" | docker login -u shqld --password-stdin ghcr.io
 	@export CONTAINER_UID=$(id -u app)
 	docker-compose -f /ops/gateway/docker-compose.yaml pull
-	docker stack up gateway --compose-file /ops/gateway/docker-compose.yaml --prune
+	docker-compose -f /ops/gateway/docker-compose.yaml up -d
 
 .PHONY: issue-cert
 issue-cert:
