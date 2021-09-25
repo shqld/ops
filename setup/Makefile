@@ -1,6 +1,4 @@
-include users/Makefile
-
-setup: init-bee user setup_sshd install_packages setup_docker setup_ipv6
+setup: init-bee setup_sshd setup_user install_packages setup_docker setup_ipv6
 	@touch $(BEE)/$(@)
 
 .PHONY: setup_sshd

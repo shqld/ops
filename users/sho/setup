@@ -1,0 +1,40 @@
+#! /bin/sh
+
+set -eu
+
+if ! getent passwd sho; then
+  echo "Adding user(sho) ..."
+  useradd sho
+fi
+
+if getent group docker; then
+  echo "Adding user(sho) to group(docker) ..."
+  usermod -a -G docker sho
+fi
+
+# -----------------------------------------------
+
+echo "Setting /ops owner to user&group(sho) ..."
+
+chown sho -R /ops
+chmod u+rwx -R /ops
+
+# -----------------------------------------------
+
+echo "Setting up ssh authorization for user(sho) ..."
+
+mkdir -p /home/sho/.ssh
+curl https://github.com/shqld.keys > /home/sho/.ssh/authorized_keys
+chmod 600 /home/sho/.ssh/authorized_keys
+chmod 700 /home/sho/.ssh
+chown sho -R /home/sho/.ssh
+
+# -----------------------------------------------
+
+echo "Setting up sudoers for user(sho) ..."
+
+echo "
+sho ALL=(root) $(which yum)
+sho ALL=(root) $(which git)
+sho ALL=(root) $(which systemctl)
+" > /etc/sudoers.d/sho
