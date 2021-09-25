@@ -1,35 +1,14 @@
-DOCKER_CONFIG_PATH = "$HOME/.docker/config.json"
+include .bee/Makefile
 
-.PHONY: setup
-setup:
-	make -C /ops/setup
+include setup/Makefile
+include app/Makefile
+include system/Makefile
 
 .PHONY: update
 update:
 	rm -rf /ops
 	git clone https://github.com/shqld/ops /ops
 
-.PHONY: app-%
-app-%:
-	make -C /ops/app "${@:app-%=%}"
-
-.PHONY: update-nginx
-update-nginx:
-	if ! which nginx; then
-		# https://copr.fedorainfracloud.org/coprs/ryoh/nginx-quic/
-		dnf install -y epel-release
-		dnf copr enable -y ryoh/nginx-quic
-		dnf install -y nginx-quic
-
-		systemctl enable nginx
-	fi
-	if ! systemctl | grep nginx -q; then
-		nginx -t
-		ln -sfnv /ops/system/nginx/nginx.conf /etc/nginx/nginx.conf
-		systemctl start nginx
-	fi
-
-.PHONY: issue-cert
 issue-cert:
 	docker run -it --rm \
 		--name certbot \
@@ -42,14 +21,4 @@ issue-cert:
 				--agree-tos \
 				--manual-public-ip-logging-ok \
 				--preferred-challenges dns
-
-.PHONY: help
-MAKEOVERRIDES =
-help:
-	@printf "%-20s %s\n" "Target" "Description"
-	@printf "%-20s %s\n" "------" "-----------"
-	@make -pqR : 2>/dev/null \
-		| awk -v RS= -F: '/^# File/,/^# Finished Make data base/ {if ($$1 !~ "^[#.]") {print $$1}}' \
-		| sort \
-		| egrep -v -e '^[^[:alnum:]]' -e '^$@$$' \
-		| xargs -I _ sh -c 'printf "%-20s " _; make _ -nB | (grep -i "^# Help:" || echo "") | tail -1 | sed "s/^# Help: //g"'
+	@touch $(BEE)/$(@)
