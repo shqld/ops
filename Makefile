@@ -1,6 +1,7 @@
 include .bee/Makefile
 
 include setup/Makefile
+include users/Makefile
 include app/Makefile
 include system/Makefile
 
