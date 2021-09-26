@@ -1,8 +1,11 @@
-include .bee/Makefile
-
 include setup/Makefile
 include app/Makefile
 include system/Makefile
+
+.PHONY: setup
+setup:
+	sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin
+	/usr/local/bin/task -d /ops setup
 
 .PHONY: update
 update:

@@ -1,9 +1,0 @@
-#! /bin/sh
-
-set -eu
-
-# systemctl enable nginx
-
-# ln -s /ops/src/nginx/nginx.conf /etc/nginx/nginx.conf
-
-# systemctl start nginx
