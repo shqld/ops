@@ -69,12 +69,12 @@ tasks:
 
     sho_init_sudoers:
         desc: Set up sudoers for user(sho)
-        deps:
-            - sho_add_user
-        status:
-            - test -f /etc/sudoers.d/sho
+        sources:
+            - /ops/setup/users/sho/sudoers
+        generates:
+            - /etc/sudoers.d/sho
         cmds:
-            - ln -sf /ops/setup/users/sho/sudoers /etc/sudoers.d/sho
+            - sh /ops/setup/users/sho/sudoers > /etc/sudoers.d/sho
 
     robot_add_user:
         desc: Add user(robot)
@@ -101,12 +101,12 @@ tasks:
 
     robot_init_sudoers:
         desc: Set up sudoers for user(robot)
-        deps:
-            - robot_add_user
-        status:
-            - test -f /etc/sudoers.d/robot
+        sources:
+            - /ops/setup/users/robot/sudoers
+        generates:
+            - /etc/sudoers.d/robot
         cmds:
-            - ln -sf /ops/setup/users/robot/sudoers /etc/sudoers.d/robot
+            - sh /ops/setup/users/robot/sudoers > /etc/sudoers.d/robot
 
     daemon_add_user:
         desc: Add user(daemon)

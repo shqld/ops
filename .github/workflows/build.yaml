@@ -17,4 +17,4 @@ jobs:
                   script: |
                       sudo rm -rf /ops \
                       && sudo git clone https://github.com/shqld/ops.git /ops --depth 1 \
-                      && sudo make -C /ops setup > /dev/null
+                      && sudo task setup -d /ops --silent
