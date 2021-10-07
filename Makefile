@@ -26,4 +26,3 @@ issue-cert:
 				--agree-tos \
 				--manual-public-ip-logging-ok \
 				--preferred-challenges dns
-	@touch $(BEE)/$(@)

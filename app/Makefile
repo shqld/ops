@@ -6,4 +6,3 @@ app-update:
 		echo "${DOCKER_REGISTRY_TOKEN}" | docker login -u shqld --password-stdin ghcr.io
 	# @export CONTAINER_UID=$(id -u app)
 	docker-compose -f /ops/app/docker-compose.yaml up -d
-	@touch $(BEE)/$(@)

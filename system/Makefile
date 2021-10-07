@@ -12,4 +12,3 @@ system-update-nginx:
 		ln -sfnv /ops/system/nginx/nginx.conf /etc/nginx/nginx.conf
 		systemctl start nginx
 	fi
-	@touch $(BEE)/$(@)
