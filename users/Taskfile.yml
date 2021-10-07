@@ -22,6 +22,14 @@ tasks:
             - task: robot_init_ssh
             - task: robot_init_sudoers
 
+    daemon:
+        cmds:
+            - task: daemon_add_user
+
+    app:
+        cmds:
+            - task: app_add_user
+
     sho_add_user:
         desc: Add user(sho)
         status:
@@ -44,7 +52,6 @@ tasks:
             - sho_add_user
         cmds:
             - chown sho -R /ops
-            - chmod u+rwx -R /ops
 
     sho_init_ssh:
         desc: Set up ssh authorization for user(sho)
@@ -84,10 +91,10 @@ tasks:
             - test -d /home/robot/.ssh
             - test -f /home/robot/.ssh/authorized_keys
         sources:
-            - ./id.pub
+            - /ops/users/robot/id.pub
         cmds:
             - mkdir -p /home/robot/.ssh
-            - cat ./id.pub > /home/robot/.ssh/authorized_keys
+            - cat /ops/users/robot/id.pub > /home/robot/.ssh/authorized_keys
             - chmod 600 /home/robot/.ssh/authorized_keys
             - chmod 700 /home/robot/.ssh
             - chown robot -R /home/robot/.ssh
