@@ -1,11 +1,13 @@
-include setup/Makefile
-include app/Makefile
-include system/Makefile
+TEMP_DIR := $(shell mktemp -d)
 
 .PHONY: setup
-setup:
-	sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin
-	/usr/local/bin/task -d /ops setup
+setup: /usr/local/bin/task
+	task -d /ops setup:default
+
+/usr/local/bin/task:
+	curl --location https://taskfile.dev/install.sh -o $(TEMP_DIR)/install-taskfile.sh
+	sh $(TEMP_DIR)/install-taskfile.sh -d -b /usr/local/bin
+	rm $(TEMP_DIR)/install-taskfile.sh
 
 .PHONY: update
 update:
