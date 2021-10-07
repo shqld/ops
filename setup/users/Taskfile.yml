@@ -74,7 +74,7 @@ tasks:
         status:
             - test -f /etc/sudoers.d/sho
         cmds:
-            - ln -sf /ops/users/sho/sudoers /etc/sudoers.d/sho
+            - ln -sf /ops/setup/users/sho/sudoers /etc/sudoers.d/sho
 
     robot_add_user:
         desc: Add user(robot)
@@ -91,10 +91,10 @@ tasks:
             - test -d /home/robot/.ssh
             - test -f /home/robot/.ssh/authorized_keys
         sources:
-            - /ops/users/robot/id.pub
+            - /ops/setup/users/robot/id.pub
         cmds:
             - mkdir -p /home/robot/.ssh
-            - cat /ops/users/robot/id.pub > /home/robot/.ssh/authorized_keys
+            - cat /ops/setup/users/robot/id.pub > /home/robot/.ssh/authorized_keys
             - chmod 600 /home/robot/.ssh/authorized_keys
             - chmod 700 /home/robot/.ssh
             - chown robot -R /home/robot/.ssh
@@ -106,7 +106,7 @@ tasks:
         status:
             - test -f /etc/sudoers.d/robot
         cmds:
-            - ln -sf /ops/users/robot/sudoers /etc/sudoers.d/robot
+            - ln -sf /ops/setup/users/robot/sudoers /etc/sudoers.d/robot
 
     daemon_add_user:
         desc: Add user(daemon)

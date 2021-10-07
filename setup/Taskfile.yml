@@ -1,5 +1,8 @@
 version: '3'
 
+includes:
+    users: ./users
+
 tasks:
     default:
         deps:
@@ -7,6 +10,7 @@ tasks:
             - packages
             - docker
             - ipv6
+            - task: users:default
 
     sshd:
         cmds:

@@ -2,7 +2,7 @@ TEMP_DIR := $(shell mktemp -d)
 
 .PHONY: setup
 setup: /usr/local/bin/task
-	task -d /ops setup:default
+	@task setup
 
 /usr/local/bin/task:
 	curl --location https://taskfile.dev/install.sh -o $(TEMP_DIR)/install-taskfile.sh
