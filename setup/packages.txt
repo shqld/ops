@@ -1,0 +1,3 @@
+jq
+zsh
+lsof

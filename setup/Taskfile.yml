@@ -4,7 +4,7 @@ tasks:
     default:
         deps:
             - sshd
-            - install_packages
+            - packages
             - docker
             - ipv6
         cmds:
@@ -22,9 +22,11 @@ tasks:
         status:
             - grep -q 'Match User *' < /etc/ssh/sshd_config
 
-    install_packages:
+    packages:
+        sources:
+            - /ops/setup/packages.txt
         cmds:
-            - /ops/setup/scripts/install_packages
+            - xargs dnf install -y < /ops/setup/packages.txt
 
     docker:
         cmds:
