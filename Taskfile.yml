@@ -3,4 +3,8 @@ version: '3'
 includes:
     setup: ./setup
     users: ./users
-# tasks:
+
+tasks:
+    setup:
+        cmds:
+            - task: setup:default
