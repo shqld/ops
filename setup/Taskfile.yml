@@ -7,8 +7,6 @@ tasks:
             - packages
             - docker
             - ipv6
-        cmds:
-            - reboot
 
     sshd:
         cmds:
