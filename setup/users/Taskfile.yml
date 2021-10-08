@@ -42,7 +42,7 @@ tasks:
         deps:
             - sho_add_user
         status:
-            - id -g docker
+            - grep -q 'docker:.*:sho' -q < /etc/group
         cmds:
             - usermod -a -G docker sho
 
@@ -50,6 +50,8 @@ tasks:
         desc: Set /ops owner to user&group(sho)"
         deps:
             - sho_add_user
+        status:
+            - ls -la / | grep ops | grep sho
         cmds:
             - chown sho -R /ops
 
