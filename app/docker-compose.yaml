@@ -6,3 +6,13 @@ services:
             - "3000:3000"
         deploy:
             replicas: 1
+
+    varnish:
+        image: varnish:7.0.0-alpine
+        ports:
+            - "8080:80"
+        tmpfs: /var/lib/varnish:exec
+        volumes:
+            - /ops/app/varnish/default.vcl:/etc/varnish/default.vcl:ro
+        deploy:
+            replicas: 1

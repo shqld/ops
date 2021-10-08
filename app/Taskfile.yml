@@ -13,6 +13,16 @@ tasks:
         cmds:
             - docker-compose -f /ops/app/docker-compose.yaml up -d
 
+    restart:
+        deps:
+            - docker-login
+        cmds:
+            - docker-compose -f /ops/app/docker-compose.yaml restart
+
+    logs:
+        cmds:
+            - docker-compose -f /ops/app/docker-compose.yaml logs
+
     docker-login:
         silent: true
         status:
