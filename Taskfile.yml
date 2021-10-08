@@ -13,14 +13,14 @@ tasks:
 
     update:
         cmds:
-            - task: git-fetch
+            - task: git-pull
             - task: setup
             - task: system:default
             - task: app:restart
 
-    git-fetch:
+    git-pull:
         cmds:
-            - git fetch --depth=10
+            - git pull --depth=10
             - git gc --aggressive --prune=all
             - du -sh .git
 
