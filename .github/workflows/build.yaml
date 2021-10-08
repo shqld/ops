@@ -15,6 +15,4 @@ jobs:
                   username: robot
                   key: ${{ secrets.ROBOT_PRIVATE_KEY }}
                   script: |
-                      sudo rm -rf /ops \
-                      && sudo git clone https://github.com/shqld/ops.git /ops --depth 1 \
-                      && sudo task update -d /ops --silent
+                      sudo task update -d /ops --silent
