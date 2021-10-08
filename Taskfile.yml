@@ -1,9 +1,13 @@
 version: '3'
 
+includes:
+    system: ./system
+
 tasks:
     setup:
         cmds:
             - task -d /ops/setup
+            - task: system:setup
 
     issue-cert:
         interactive: true

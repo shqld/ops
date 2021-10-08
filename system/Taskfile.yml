@@ -1,0 +1,34 @@
+version: '3'
+
+tasks:
+    setup:
+        deps:
+            - nginx-start
+
+    nginx:
+        deps:
+            - nginx-start
+        cmds:
+            - nginx -t
+            - systemctl restart nginx
+
+    nginx-start:
+        deps:
+            - nginx-install
+        status:
+            - systemctl list-units --type=service --state=running | grep -q nginx.service
+        cmds:
+            - ln -sfnv /ops/system/nginx/nginx.conf /etc/nginx/nginx.conf
+            - nginx -t
+            - systemctl start nginx
+
+    nginx-install:
+        status:
+            - which nginx
+            - systemctl list-unit-files --state=enabled | grep -q nginx.service
+        cmds:
+            # https://copr.fedorainfracloud.org/coprs/ryoh/nginx-quic/
+            - dnf install -y epel-release
+            - dnf copr enable -y ryoh/nginx-quic
+            - dnf install -y nginx-quic
+            - systemctl enable nginx
