@@ -14,6 +14,7 @@ tasks:
             - task: users:default
 
     sshd:
+        silent: true
         cmds:
             - |
                 cat << EOF > /etc/ssh/sshd_config
