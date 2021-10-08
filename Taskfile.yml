@@ -16,7 +16,7 @@ tasks:
             - task: git-fetch
             - task: setup
             - task: system:default
-            - task: app:default
+            - task: app:restart
 
     git-fetch:
         cmds:

@@ -2,30 +2,35 @@ version: '3'
 
 tasks:
     setup:
-        status:
-            - docker-compose -f /ops/app/docker-compose.yaml ps | grep -q app_www
         cmds:
-            - task: default
+            - task: up
 
-    default:
+    up:
         sources:
-            - /ops/app/varnish/default.vcl
             - /ops/app/docker-compose.yaml
         deps:
             - docker-login
         cmds:
             - docker-compose -f /ops/app/docker-compose.yaml up -d
 
+    down:
+        deps:
+            - up
+        cmds:
+            - docker-compose -f /ops/app/docker-compose.yaml down
+
     restart:
         sources:
             - /ops/app/varnish/default.vcl
-            - /ops/app/docker-compose.yaml
         deps:
             - docker-login
+            - up
         cmds:
             - docker-compose -f /ops/app/docker-compose.yaml restart
 
     logs:
+        deps:
+            - up
         cmds:
             - docker-compose -f /ops/app/docker-compose.yaml logs
 
