@@ -8,12 +8,18 @@ tasks:
             - task: default
 
     default:
+        sources:
+            - /ops/app/varnish/default.vcl
+            - /ops/app/docker-compose.yaml
         deps:
             - docker-login
         cmds:
             - docker-compose -f /ops/app/docker-compose.yaml up -d
 
     restart:
+        sources:
+            - /ops/app/varnish/default.vcl
+            - /ops/app/docker-compose.yaml
         deps:
             - docker-login
         cmds:
