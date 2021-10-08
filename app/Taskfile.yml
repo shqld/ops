@@ -8,10 +8,11 @@ tasks:
     up:
         sources:
             - /ops/app/docker-compose.yaml
+            - /ops/app/varnish/Dockerfile
         deps:
             - docker-login
         cmds:
-            - docker-compose -f /ops/app/docker-compose.yaml up -d
+            - docker-compose -f /ops/app/docker-compose.yaml up -d --build
 
     down:
         deps:

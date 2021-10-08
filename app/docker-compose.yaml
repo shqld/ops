@@ -8,7 +8,7 @@ services:
             replicas: 1
 
     varnish:
-        image: varnish:7.0.0-alpine
+        build: ./varnish
         ports:
             - "8080:80"
         tmpfs: /var/lib/varnish:exec
