@@ -6,5 +6,5 @@ echo "
 robot ALL=(root) NOPASSWD: $(which rm) -rf /ops
 robot ALL=(root) NOPASSWD: $(which git) clone *
 
-robot ALL=(root) NOPASSWD: $(which task) setup -d /ops --silent
+robot ALL=(root) NOPASSWD: $(which task) update -d /ops --silent
 "

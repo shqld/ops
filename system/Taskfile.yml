@@ -5,6 +5,12 @@ tasks:
         deps:
             - nginx-start
 
+    default:
+        deps:
+            - setup
+        cmds:
+            - task: nginx
+
     nginx:
         sources:
             - /ops/system/nginx/nginx.conf

@@ -11,6 +11,13 @@ tasks:
             - task: system:setup
             - task: app:setup
 
+    update:
+        deps:
+            - task: setup
+        cmds:
+            - task: system:default
+            - task: app:default
+
     issue-cert:
         interactive: true
         cmds:
