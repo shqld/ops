@@ -2,12 +2,14 @@ version: '3'
 
 includes:
     system: ./system
+    app: ./app
 
 tasks:
     setup:
         cmds:
             - task -d /ops/setup
             - task: system:setup
+            - task: app:setup
 
     issue-cert:
         interactive: true
