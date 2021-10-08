@@ -1,8 +1,16 @@
+vcl 4.1;
+
+# Guide for VCL 4.0
 # https://varnish-cache.org/docs/trunk/whats-new/upgrading-4.0.html
 # https://www.varnish-software.com/wiki/content/tutorials/varnish/sample_vclTemplate.html
 # https://github.com/mattiasgeniar/varnish-4.0-configuration-templates/
 
-vcl 4.1;
+# Reference
+# https://varnish-cache.org/docs/trunk/reference/vcl.html
+# https://varnish-cache.org/docs/trunk/reference/vcl-var.html
+
+import std;
+import cookie;
 
 backend default {
   .host = "www";
@@ -10,8 +18,19 @@ backend default {
 }
 
 sub vcl_recv {
-  if (req.url ~ "/.vcl/synthetic/hello") {
-      return (synth(800, "Hello World"));
+  set req.url = std.querysort(req.url);
+
+  if (req.http.cookie) {
+    cookie.parse(req.http.cookie);
+  }
+
+  if (req.url ~ "^/\.") {
+    # e.g. "/.bundles", "/.assets", "/.synth"
+    set req.http.x-is-special-path = true;
+  }
+
+  if (req.url ~ "/.synth/hello") {
+    return (synth(800, "Hello World"));
   }
 }
 
@@ -28,5 +47,8 @@ sub vcl_synth {
 }
 
 sub vcl_deliver {
+  unset resp.http.via;
+  unset resp.http.x-varnish;
+
   set resp.http.x-shqld = "Hello from @shqld";
 }
