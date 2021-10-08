@@ -17,7 +17,7 @@ tasks:
         silent: true
         cmds:
             - |
-                cat << EOF > /etc/ssh/sshd_config
+                cat << EOF >> /etc/ssh/sshd_config
                 Match User *
                     PasswordAuthentication no
                     PubkeyAuthentication yes
