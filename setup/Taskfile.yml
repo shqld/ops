@@ -1,16 +1,15 @@
 version: '3'
 
 includes:
+    packages: ./packages
     users: ./users
 
 tasks:
     default:
         deps:
             - sshd
-            - packages
-            - docker
-            - docker-compose
             - ipv6
+            - task: packages:default
             - task: users:default
 
     sshd:
@@ -25,35 +24,6 @@ tasks:
             - systemctl restart sshd
         status:
             - grep -q 'Match User *' < /etc/ssh/sshd_config
-
-    packages:
-        sources:
-            - /ops/setup/packages.txt
-        cmds:
-            - xargs dnf install -y < /ops/setup/packages.txt
-
-    docker:
-        status:
-            - systemctl list-unit-files --state=enabled | grep -q docker.service
-            - systemctl list-units --type=service --state=running | grep -q docker.service
-        cmds:
-            - yum install -y yum-utils
-            - |
-                yum-config-manager -y --add-repo \
-                    https://download.docker.com/linux/centos/docker-ce.repo
-            - yum -y remove podman # https://github.com/containers/podman/issues/4791
-            - yum install -y docker-ce docker-ce-cli containerd.io
-            - systemctl enable docker
-            - systemctl start docker
-
-    docker-compose:
-        deps:
-            - docker
-        status:
-            - which docker-compose
-        cmds:
-            - curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/bin/docker-compose
-            - chmod +x /usr/bin/docker-compose
 
     ipv6:
         status:

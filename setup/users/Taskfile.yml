@@ -41,6 +41,7 @@ tasks:
         desc: Add user(sho) to group(docker)
         deps:
             - sho_add_user
+            - :packages:docker
         status:
             - grep -q 'docker:.*:sho' -q < /etc/group
         cmds:
