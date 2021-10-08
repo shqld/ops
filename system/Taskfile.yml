@@ -6,6 +6,8 @@ tasks:
             - nginx-start
 
     nginx:
+        sources:
+            - /ops/system/nginx/nginx.conf
         deps:
             - nginx-start
         cmds:
