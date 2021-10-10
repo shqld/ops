@@ -50,5 +50,5 @@ sub vcl_deliver {
   unset resp.http.via;
   unset resp.http.x-varnish;
 
-  set resp.http.x-shqld = "Test: OK";
+  set resp.http.x-shqld = "Hello from @shqld";
 }
