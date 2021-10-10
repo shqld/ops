@@ -19,6 +19,9 @@ tasks:
             - task: app:restart
 
     git-pull:
+        preconditions:
+            - sh: git diff --exit-code
+              msg: Working tree is NOT clean
         cmds:
             - git pull --depth=10
             - git gc --aggressive --prune=all
