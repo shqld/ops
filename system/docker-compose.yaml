@@ -1,0 +1,12 @@
+version: '3.8'
+services:
+    nginx:
+        image: ranadeeppolavarapu/nginx-http3
+        tmpfs: /var/lib/varnish:exec
+        volumes:
+            - /ops/system/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+            - /etc/letsencrypt/live/shqld.dev/fullchain.pem:/etc/letsencrypt/live/shqld.dev/fullchain.pem:ro
+            - /etc/letsencrypt/live/shqld.dev/privkey.pem:/etc/letsencrypt/live/shqld.dev/privkey.pem:ro
+        deploy:
+            replicas: 1
+        network_mode: host

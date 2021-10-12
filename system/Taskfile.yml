@@ -2,41 +2,25 @@ version: '3'
 
 tasks:
     setup:
-        deps:
-            - nginx-start
-
-    default:
-        deps:
-            - setup
         cmds:
-            - task: nginx
+            - task: up
 
-    nginx:
+    up:
+        cmds:
+            - docker-compose -f /ops/system/docker-compose.yaml up -d --build
+
+    down:
+        cmds:
+            - docker-compose -f /ops/system/docker-compose.yaml down
+
+    restart:
         sources:
             - /ops/system/nginx/nginx.conf
-        deps:
-            - nginx-start
         cmds:
-            - nginx -t
-            - systemctl restart nginx
+            - docker-compose -f /ops/system/docker-compose.yaml restart
 
-    nginx-start:
+    logs:
         deps:
-            - nginx-install
-        status:
-            - systemctl list-units --type=service --state=running | grep -q nginx.service
+            - up
         cmds:
-            - ln -sfnv /ops/system/nginx/nginx.conf /etc/nginx/nginx.conf
-            - nginx -t
-            - systemctl start nginx
-
-    nginx-install:
-        status:
-            - which nginx
-            - systemctl list-unit-files --state=enabled | grep -q nginx.service
-        cmds:
-            # https://copr.fedorainfracloud.org/coprs/ryoh/nginx-quic/
-            - dnf install -y epel-release
-            - dnf copr enable -y ryoh/nginx-quic
-            - dnf install -y nginx-quic
-            - systemctl enable nginx
+            - docker-compose -f /ops/system/docker-compose.yaml logs

@@ -15,7 +15,7 @@ tasks:
         cmds:
             - task: git-pull
             - task: setup
-            - task: system:default
+            - task: system:restart
             - task: app:restart
 
     git-pull:
