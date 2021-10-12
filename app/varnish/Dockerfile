@@ -59,6 +59,21 @@ RUN ./bootstrap && \
     make check -j 4 && \
     make install
 
+# Install libvmod-uuid
+# -----------------------
+
+# required for autoconf
+RUN dnf -y install autoconf-archive
+# https://github.com/otto-de/libvmod-uuid/blob/ae0ca345b9974092bf139409d2852fc46886c250/README.rst#dependencies
+RUN dnf -y install uuid-devel
+RUN git clone --single-branch --depth=1 https://github.com/otto-de/libvmod-uuid.git /usr/local/lib/libvmod-uuid
+WORKDIR /usr/local/lib/libvmod-uuid
+RUN ./autogen.sh && \
+    ./configure && \
+    make && \
+    make check && \
+    make install
+
 
 # https://varnish-cache.org/docs/6.0/reference/varnishd.html
 ENTRYPOINT ["varnishd", "-F", "-a", "0.0.0.0:6081", "-f", "/etc/varnish/default.vcl"]
