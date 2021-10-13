@@ -1,2 +1,5 @@
--   `ROBOT_PRIVATE_KEY`
--   `DOCKER_REGISTRY_TOKEN`
+Set this to `/etc/environment`
+
+```sh
+DOCKER_REGISTRY_TOKEN
+```
