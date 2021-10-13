@@ -11,6 +11,7 @@ vcl 4.1;
 
 import std;
 import cookie;
+import uuid;
 
 backend default {
   .host = "www";
@@ -51,4 +52,9 @@ sub vcl_deliver {
   unset resp.http.x-varnish;
 
   set resp.http.x-shqld = "Hello from @shqld";
+
+  if (!req.http.x-is-special-path && !cookie.get("__Secure-id")) {
+    # 'Domain' should not be set in a basic way to prevent unintended subdomains to be included, but I set here intentionally
+    set resp.http.set-cookie = "__Secure-id=" + uuid.uuid_v4() + "; Max-Age=31556952; HttpOnly; Secure; SameSite=None; Domain=shqld.dev;";
+  }
 }
