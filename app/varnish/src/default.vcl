@@ -13,6 +13,8 @@ import std;
 import cookie;
 import uuid;
 
+include "check-bfcache.vcl";
+
 backend default {
   .host = "www";
   .port = "3000";
@@ -33,6 +35,8 @@ sub vcl_recv {
   if (req.url ~ "/.synth/hello") {
     return (synth(800, "Hello World"));
   }
+
+  call check_bfcache_recv;
 }
 
 sub vcl_backend_response {
@@ -45,6 +49,8 @@ sub vcl_synth {
         synthetic("<h1>Hello World</h1>");
         return (deliver);
     }
+
+    call check_bfcache_synth;
 }
 
 sub vcl_deliver {
