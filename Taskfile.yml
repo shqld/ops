@@ -2,6 +2,7 @@ version: '3'
 
 includes:
     system: ./system
+    monitoring: ./monitoring
     app: ./app
 
 tasks:
@@ -9,6 +10,7 @@ tasks:
         cmds:
             - task -d /ops/setup
             - task: system:setup
+            - task: monitoring:setup
             - task: app:setup
 
     update:

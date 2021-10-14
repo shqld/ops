@@ -1,0 +1,12 @@
+version: '3'
+
+tasks:
+    setup:
+        cmds:
+            - task: newrelic:link-logging.yaml
+
+    newrelic:link-logging.yml:
+        status:
+            - test -L /etc/newrelic-infra/logging.d/logging.yml
+        cmds:
+            - ln -s -f /ops/monitoring/newrelic/logging.yml /etc/newrelic-infra/logging.d/logging.yml

@@ -1,0 +1,30 @@
+logs:
+  - name: messages
+    file: /var/log/messages
+  - name: secure
+    file: /var/log/secure
+  - name: containers
+    file: /var/lib/docker/containers/*/*.log
+  - name: newrelic-cli.log
+    file: /root/.newrelic/newrelic-cli.log
+    attributes:
+      newrelic-cli: true
+  - name: nginx-access-logs
+    file: /var/log/nginx/access.log
+    attributes:
+      type: access-log
+      service: nginx
+      logtype: nginx
+  - name: nginx-error-logs
+    file: /var/log/nginx/error.log
+    attributes:
+      service: error
+      logtype: nginx-error
+  - name: varnish-access-logs
+    file: /var/log/varnish/access.log
+    attributes:
+      type: access-log
+      service: varnish
+      logtype: nginx
+  - name: sshd
+    systemd: sshd
