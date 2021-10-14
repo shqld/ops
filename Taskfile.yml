@@ -27,6 +27,16 @@ tasks:
             - git gc --aggressive --prune=all
             - du -sh .git
 
+    install-newrelic:
+        status:
+            - cat $HOME/.newrelic/newrelic-cli.log | grep '^{' | jq -r 'select(.status == "INSTALLED").recipe_name' | grep -q infrastructure-agent-installer
+        preconditions:
+            - test -v NEW_RELIC_API_KEY
+            - test -v NEW_RELIC_ACCOUNT_ID
+        cmds:
+            - curl -Ls https://download.newrelic.com/install/newrelic-cli/scripts/install.sh | bash
+            - /usr/local/bin/newrelic install -y
+
     issue-cert:
         interactive: true
         cmds:
