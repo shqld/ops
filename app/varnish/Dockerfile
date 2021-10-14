@@ -40,4 +40,4 @@ RUN apk add --update --no-cache --virtual build-vmod \
     apk del --purge build-vmod
 
 # https://varnish-cache.org/docs/6.0/reference/varnishd.html
-ENTRYPOINT ["varnishd", "-F", "-a", "0.0.0.0:6081", "-f", "/etc/varnish/default.vcl"]
+ENTRYPOINT ["sh", "-c", "varnishd -F -a 0.0.0.0:6081 -f /etc/varnish/default.vcl & varnishncsa -w /var/log/varnish/access.log"]
