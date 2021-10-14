@@ -1,0 +1,17 @@
+version: '3'
+
+tasks:
+    setup:
+        cmds:
+
+    centos:
+        sources:
+            - ./images/centos:8-stream/Dockerfile
+        cmds:
+            - docker build ./images/centos:8-stream -t centos:8-stream
+
+    test-setup:
+        sources:
+            - ./images/test-setup/Dockerfile
+        cmds:
+            - docker build ./images/test-setup -t test-setup

@@ -3,6 +3,7 @@ version: '3'
 includes:
     system: ./system
     app: ./app
+    images: ./images
 
 tasks:
     setup:
@@ -17,6 +18,12 @@ tasks:
             - task: setup
             - task: system:restart
             - task: app:restart
+
+    test:
+        cmds:
+            - task: images:test-setup
+            - |
+                docker run --init -v /Users/sho/ghq/github.com/shqld/ops:/ops test-setup
 
     git-pull:
         preconditions:
