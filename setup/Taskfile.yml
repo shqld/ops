@@ -23,7 +23,7 @@ tasks:
                 EOF
             - systemctl restart sshd
         status:
-            - grep -q 'Match User *' < /etc/ssh/sshd_config
+            - grep -q 'Match User \*' < /etc/ssh/sshd_config
 
     ipv6:
         status:
