@@ -36,7 +36,7 @@ tasks:
             - docker-login
         cmds:
             - docker-compose -f /ops/app/docker-compose.yaml pull
-            - task: restart
+            - task: up
 
     logs:
         deps:
