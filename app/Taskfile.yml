@@ -25,11 +25,18 @@ tasks:
     restart:
         sources:
             - /ops/app/varnish/default.vcl
-        deps:
-            - docker-login
-            - up
+        # deps:
+            # - docker-login
+            # - up
         cmds:
             - docker-compose -f /ops/app/docker-compose.yaml restart
+
+    update:
+        deps:
+            - docker-login
+        cmds:
+            - docker-compose -f /ops/app/docker-compose.yaml pull
+            - task: restart
 
     logs:
         deps:

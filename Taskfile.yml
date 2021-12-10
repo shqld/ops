@@ -18,7 +18,7 @@ tasks:
             - task: git-pull
             - task: setup
             - task: system:restart
-            - task: app:restart
+            - task: app:update
 
     git-pull:
         preconditions:
