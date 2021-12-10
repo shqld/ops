@@ -3,7 +3,7 @@ version: '3'
 tasks:
     setup:
         cmds:
-            - task: newrelic:link-logging.yaml
+            - task: newrelic:link-logging.yml
 
     newrelic:link-logging.yml:
         status:
