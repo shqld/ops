@@ -42,5 +42,5 @@ tasks:
         status:
             - grep -q 'ghcr.io' < "$HOME/.docker/config.json"
         cmds:
-            - test -f "${DOCKER_REGISTRY_TOKEN}"
+            - test -n "${DOCKER_REGISTRY_TOKEN}"
             - echo "${DOCKER_REGISTRY_TOKEN}" | docker login -u shqld --password-stdin ghcr.io
