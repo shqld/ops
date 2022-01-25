@@ -13,6 +13,8 @@ import std;
 import cookie;
 import uuid;
 
+include "chunks/example.vcl";
+
 backend default {
   .host = "www";
   .port = "3000";
@@ -28,6 +30,8 @@ sub vcl_recv {
   if (req.http.cookie) {
     cookie.parse(req.http.cookie);
   }
+
+  call example_recv;
 
   if (req.url ~ "^/\.") {
     # e.g. "/.bundles", "/.assets", "/.synth"
@@ -48,7 +52,8 @@ sub vcl_recv {
   }
 }
 
-sub vcl_backend_response {
+sub vcl_hash {
+  call example_hash;
 }
 
 sub vcl_synth {
@@ -61,6 +66,35 @@ sub vcl_synth {
         set resp.http.WWW-Authenticate = {"Basic realm="Authorization Required""};
         return(deliver);
     }
+
+    call example_synth;
+}
+
+sub vcl_hit {
+  call example_hit;
+}
+sub vcl_miss {
+  call example_miss;
+}
+sub vcl_pass {
+  call example_pass;
+}
+
+sub vcl_backend_fetch {
+  call example_backend_fetch;
+}
+sub vcl_backend_response {
+  call example_backend_response;
+}
+sub vcl_backend_error {
+  call example_backend_error;
+}
+
+sub vcl_purge {
+  call example_purge;
+}
+sub vcl_pipe {
+  call example_pipe;
 }
 
 sub vcl_deliver {
@@ -68,6 +102,8 @@ sub vcl_deliver {
   unset resp.http.x-varnish;
 
   set resp.http.x-shqld = "Hello from @shqld";
+
+  call example_deliver;
 
   if (!req.http.x-is-special-path && !cookie.get("__Secure-id")) {
     # 'Domain' should not be set in a basic way to prevent unintended subdomains to be included, but I set here intentionally

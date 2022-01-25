@@ -23,6 +23,7 @@ services:
         tmpfs: /var/lib/varnish:exec
         volumes:
             - /ops/system/varnish/default.vcl:/etc/varnish/default.vcl:ro
+            - /ops/system/varnish/chunks:/etc/varnish/chunks:ro
             - /var/log/varnish:/var/log/varnish
         deploy:
             replicas: 1
