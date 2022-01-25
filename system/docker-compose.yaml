@@ -7,6 +7,8 @@ services:
             - /ops/system/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
             - /etc/letsencrypt/live/shqld.dev/fullchain.pem:/etc/letsencrypt/live/shqld.dev/fullchain.pem:ro
             - /etc/letsencrypt/live/shqld.dev/privkey.pem:/etc/letsencrypt/live/shqld.dev/privkey.pem:ro
+            - /etc/letsencrypt/live/me.shqld.dev/fullchain.pem:/etc/letsencrypt/live/me.shqld.dev/fullchain.pem:ro
+            - /etc/letsencrypt/live/me.shqld.dev/privkey.pem:/etc/letsencrypt/live/me.shqld.dev/privkey.pem:ro
             - /var/log/nginx:/var/log/nginx
         deploy:
             replicas: 1

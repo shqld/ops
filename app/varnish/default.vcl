@@ -17,6 +17,10 @@ backend default {
   .host = "www";
   .port = "3000";
 }
+backend me {
+  .host = "me";
+  .port = "3001";
+}
 
 sub vcl_recv {
   set req.url = std.querysort(req.url);
@@ -33,6 +37,15 @@ sub vcl_recv {
   if (req.url ~ "/.synth/hello") {
     return (synth(800, "Hello World"));
   }
+
+  if (req.http.host == "me.shqld.dev") {
+    # FIXME: move the value inside of the private repo (me.shqld.dev)
+    if (req.http.Authorization != "Basic c2hxbGQ6bGFsYQ==") {
+      return (synth(401));
+    }
+
+    set req.backend_hint = me;
+  }
 }
 
 sub vcl_backend_response {
@@ -44,6 +57,9 @@ sub vcl_synth {
         set resp.http.Content-Type = "text/html; charset=utf-8";
         synthetic("<h1>Hello World</h1>");
         return (deliver);
+    } else if (req.http.host == "me.shqld.dev" && resp.status == 401) {
+        set resp.http.WWW-Authenticate = {"Basic realm="Authorization Required""};
+        return(deliver);
     }
 }
 
