@@ -9,8 +9,17 @@ tasks:
         deps:
             - sshd
             - ipv6
+            - deno
             - task: packages:default
             - task: users:default
+    
+    deno:
+        desc: Install deno
+        cmds:
+            - curl -fsSL https://deno.land/install.sh | sh
+            - ln -sfnv /root/.deno/bin/deno /usr/local/bin/deno
+        status:
+            - which deno
 
     sshd:
         silent: true
