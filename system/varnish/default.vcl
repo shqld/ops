@@ -14,14 +14,11 @@ import cookie;
 import uuid;
 
 include "chunks/example.vcl";
+include "chunks/me.vcl";
 
 backend default {
   .host = "www";
   .port = "3000";
-}
-backend me {
-  .host = "me";
-  .port = "3001";
 }
 
 sub vcl_recv {
@@ -32,6 +29,7 @@ sub vcl_recv {
   }
 
   call example_recv;
+  call me_recv;
 
   if (req.url ~ "^/\.") {
     # e.g. "/.bundles", "/.assets", "/.synth"
@@ -40,15 +38,6 @@ sub vcl_recv {
 
   if (req.url ~ "/.synth/hello") {
     return (synth(800, "Hello World"));
-  }
-
-  if (req.http.host == "me.shqld.dev") {
-    # FIXME: move the value inside of the private repo (me.shqld.dev)
-    if (req.http.Authorization != "Basic c2hxbGQ6bGFsYQ==") {
-      return (synth(401));
-    }
-
-    set req.backend_hint = me;
   }
 }
 
@@ -62,12 +51,10 @@ sub vcl_synth {
         set resp.http.Content-Type = "text/html; charset=utf-8";
         synthetic("<h1>Hello World</h1>");
         return (deliver);
-    } else if (req.http.host == "me.shqld.dev" && resp.status == 401) {
-        set resp.http.WWW-Authenticate = {"Basic realm="Authorization Required""};
-        return(deliver);
     }
 
     call example_synth;
+    call me_synth;
 }
 
 sub vcl_hit {
