@@ -23,8 +23,6 @@ tasks:
             - docker-compose -f /ops/app/docker-compose.yaml down
 
     restart:
-        sources:
-            - /ops/app/varnish/default.vcl
         # deps:
             # - docker-login
             # - up

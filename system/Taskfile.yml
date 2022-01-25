@@ -16,6 +16,7 @@ tasks:
     restart:
         sources:
             - /ops/system/nginx/nginx.conf
+            - /ops/system/varnish/default.vcl
         cmds:
             - docker-compose -f /ops/system/docker-compose.yaml restart
 

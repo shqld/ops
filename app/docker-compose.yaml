@@ -17,14 +17,3 @@ services:
             - PORT=3001
         deploy:
             replicas: 1
-
-    varnish:
-        build: ./varnish
-        ports:
-            - "8080:6081"
-        tmpfs: /var/lib/varnish:exec
-        volumes:
-            - /ops/app/varnish/default.vcl:/etc/varnish/default.vcl:ro
-            - /var/log/varnish:/var/log/varnish
-        deploy:
-            replicas: 1

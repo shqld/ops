@@ -13,3 +13,20 @@ services:
         deploy:
             replicas: 1
         network_mode: host
+
+    varnish:
+        build: ./varnish
+        ports:
+            - "8080:6081"
+        networks:
+            - app_default
+        tmpfs: /var/lib/varnish:exec
+        volumes:
+            - /ops/system/varnish/default.vcl:/etc/varnish/default.vcl:ro
+            - /var/log/varnish:/var/log/varnish
+        deploy:
+            replicas: 1
+
+networks:
+  app_default:
+    external: true
