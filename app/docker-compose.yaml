@@ -6,6 +6,8 @@ services:
             - "3000:3000"
         environment:
             - PORT=3000
+        networks:
+            - system_default
         deploy:
             replicas: 1
 
@@ -15,5 +17,11 @@ services:
             - "3001:3001"
         environment:
             - PORT=3001
+        networks:
+            - system_default
         deploy:
             replicas: 1
+
+networks:
+    system_default:
+        external: true

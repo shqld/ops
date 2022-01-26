@@ -7,21 +7,8 @@ tasks:
 
     up:
         cmds:
-            - docker-compose -f /ops/system/docker-compose.yaml up -d --build
+            - docker stack up system -c /ops/system/docker-compose.yaml
 
     down:
         cmds:
-            - docker-compose -f /ops/system/docker-compose.yaml down
-
-    restart:
-        sources:
-            - /ops/system/nginx/nginx.conf
-            - /ops/system/varnish/default.vcl
-        cmds:
-            - docker-compose -f /ops/system/docker-compose.yaml restart
-
-    logs:
-        deps:
-            - up
-        cmds:
-            - docker-compose -f /ops/system/docker-compose.yaml logs
+            - docker stack down system -c /ops/system/docker-compose.yaml

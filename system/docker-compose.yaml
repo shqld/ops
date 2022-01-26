@@ -3,6 +3,11 @@ services:
     nginx:
         image: ranadeeppolavarapu/nginx-http3
         tmpfs: /var/lib/varnish:exec
+        ports:
+            - target: 443
+              published: 443
+              protocol: tcp/udp
+              mode: host
         volumes:
             - /ops/system/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
             - /etc/letsencrypt/live/shqld.dev/fullchain.pem:/etc/letsencrypt/live/shqld.dev/fullchain.pem:ro
@@ -14,14 +19,9 @@ services:
             - /var/log/nginx:/var/log/nginx
         deploy:
             replicas: 1
-        network_mode: host
 
     varnish:
-        build: ./varnish
-        ports:
-            - "8080:6081"
-        networks:
-            - app_default
+        image: system_varnish
         tmpfs: /var/lib/varnish:exec
         volumes:
             - /ops/system/varnish/default.vcl:/etc/varnish/default.vcl:ro
@@ -29,7 +29,3 @@ services:
             - /var/log/varnish:/var/log/varnish
         deploy:
             replicas: 1
-
-networks:
-  app_default:
-    external: true

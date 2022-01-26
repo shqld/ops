@@ -8,39 +8,12 @@ tasks:
     up:
         deps:
             - docker-login
-            - build
         cmds:
-            - docker-compose -f /ops/app/docker-compose.yaml up -d
-
-    build:
-        sources:
-            - /ops/app/varnish/Dockerfile
-        cmds:
-            - docker-compose -f /ops/app/docker-compose.yaml build
+            - docker stack up app -c /ops/app/docker-compose.yaml
 
     down:
         cmds:
-            - docker-compose -f /ops/app/docker-compose.yaml down
-
-    restart:
-        # deps:
-            # - docker-login
-            # - up
-        cmds:
-            - docker-compose -f /ops/app/docker-compose.yaml restart
-
-    update:
-        deps:
-            - docker-login
-        cmds:
-            - docker-compose -f /ops/app/docker-compose.yaml pull
-            - task: up
-
-    logs:
-        deps:
-            - up
-        cmds:
-            - docker-compose -f /ops/app/docker-compose.yaml logs
+            - docker stack down app -c /ops/app/docker-compose.yaml
 
     docker-login:
         silent: true
