@@ -9,6 +9,8 @@ services:
             - /etc/letsencrypt/live/shqld.dev/privkey.pem:/etc/letsencrypt/live/shqld.dev/privkey.pem:ro
             - /etc/letsencrypt/live/me.shqld.dev/fullchain.pem:/etc/letsencrypt/live/me.shqld.dev/fullchain.pem:ro
             - /etc/letsencrypt/live/me.shqld.dev/privkey.pem:/etc/letsencrypt/live/me.shqld.dev/privkey.pem:ro
+            - /etc/letsencrypt/live/agent.shqld.dev/fullchain.pem:/etc/letsencrypt/live/agent.shqld.dev/fullchain.pem:ro
+            - /etc/letsencrypt/live/agent.shqld.dev/privkey.pem:/etc/letsencrypt/live/agent.shqld.dev/privkey.pem:ro
             - /var/log/nginx:/var/log/nginx
         deploy:
             replicas: 1
