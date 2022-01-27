@@ -1,14 +1,19 @@
-build: setup *.go
-	@docker run -v /ops/agent:/go/src/app go-workspace go build -o bin .
-
-tidy: setup *.go
-	@docker run -v /ops/agent:/go/src/app go-workspace go mod tidy
-
-run: build 
+run: .task/build
 	@./bin
 
-setup:
-	@(docker images | grep -q go-workspace) || make setup.image
+build:
+	@make .task/build
 
-setup.image:
+.task/build: .task/setup .task/tidy *.go
+	@docker run -v /ops/agent:/go/src/app go-workspace go build -o bin .
+	@touch .task/build
+
+.task/tidy: .task/setup go.mod
+	@docker run -v /ops/agent:/go/src/app go-workspace go mod tidy
+	@touch .task/tidy
+
+.task/setup: .task/setup/image
+
+.task/setup/image: Dockerfile
 	@docker build -t go-workspace .
+	@touch .task/setup/image
