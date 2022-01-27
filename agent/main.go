@@ -14,13 +14,13 @@ import (
 func main() {
 	http.HandleFunc("/webhook/github", handleWebhookGithub)
 
-	fmt.Println("server listening at 7000")
+	log.Println("server listening at 7000")
 
 	log.Fatal(http.ListenAndServe(":7000", nil))
 }
 
 func handleWebhookGithub(w http.ResponseWriter, req *http.Request) {
-	fmt.Println(req.Method, req.URL)
+	log.Println(req.Method, req.URL)
 
 	if req.Method != "POST" {
 		http.NotFound(w, req)
@@ -38,7 +38,7 @@ func handleWebhookGithub(w http.ResponseWriter, req *http.Request) {
 
 	webhook_type := github.WebHookType(req)
 
-	fmt.Println("webhook_type", webhook_type)
+	log.Println("webhook_type", webhook_type)
 
 	event, err := github.ParseWebHook(webhook_type, payload)
 	if err != nil {
@@ -59,18 +59,36 @@ func handleWebhookGithubWorkflowRunEvent(w http.ResponseWriter, event *github.Wo
 	if workflow_run.GetStatus() == "completed" {
 		image_url := fmt.Sprintf("ghcr.io/%s/web:%s", workflow_run.GetRepository().GetFullName(), workflow_run.GetHeadSHA())
 
-		fmt.Println("image_url", image_url)
-		io.WriteString(w, image_url)
-
 		if (workflow_run.GetRepository().GetFullName() == "shqld/me") {
-			out, err := exec.Command("docker", "service", "update", "app_me", "--image", image_url).Output()
+			log.Printf("running 'docker pull %s'\n", image_url)
+
+			out, err := exec.Command("docker", "pull", image_url).Output()
+			if err != nil {
+				log.Printf("command failed: 'docker pull %s' err=%s\n", image_url, err)
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+			log.Println(string(out))
+
+			log.Printf("running 'docker service update app_me --image %s'\n", image_url)
+
+			out, err = exec.Command("docker", "service", "update", "app_me", "--image", image_url).Output()
 			if err != nil {
 				log.Printf("command failed: 'docker service update app_me --image %s' err=%s\n", image_url, err)
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 				return
 			}
-			w.Write(out)
-			fmt.Println(string(out))
+			log.Println(string(out))
+
+			log.Printf("running 'docker system prune -f'\n")
+
+			out, err = exec.Command("docker", "system", "prune", "-f").Output()
+			if err != nil {
+				log.Printf("command failed: 'docker system prune -f' err=%s\n", err)
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+			log.Println(string(out))
 		}
 	}
 }
