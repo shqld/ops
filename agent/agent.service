@@ -1,0 +1,12 @@
+[Unit]
+Description = agent
+
+[Service]
+User = root
+Type = simple
+ExecStart = make run
+WorkingDirectory = /ops/agent
+Restart = always
+
+[Install]
+WantedBy = multi-user.target

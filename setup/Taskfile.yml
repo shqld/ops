@@ -25,6 +25,14 @@ tasks:
         status:
             - grep -q 'Match User \*' < /etc/ssh/sshd_config
 
+    agent:
+        generates:
+            - /etc/systemd/system/agent.service
+        cmds:
+            - ln -sfnv /ops/agent/agent.service /etc/systemd/system/agent.service
+            - systemctl enable agent
+            - systemctl start agent
+
     firewall:
         cmds:
             - |
