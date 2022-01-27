@@ -14,9 +14,9 @@ import (
 func main() {
 	http.HandleFunc("/webhook/github", handleWebhookGithub)
 
-	fmt.Println("server listening at 8000")
+	fmt.Println("server listening at 7000")
 
-	log.Fatal(http.ListenAndServe(":8000", nil))
+	log.Fatal(http.ListenAndServe(":7000", nil))
 }
 
 func handleWebhookGithub(w http.ResponseWriter, req *http.Request) {
@@ -62,24 +62,15 @@ func handleWebhookGithubWorkflowRunEvent(w http.ResponseWriter, event *github.Wo
 		fmt.Println("image_url", image_url)
 		io.WriteString(w, image_url)
 
-		out, err := exec.Command("docker", "pull", image_url).Output()
-		if err != nil {
-			log.Printf("command failed: 'docker pull %s' err=%s\n", image_url, err)
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
+		if (workflow_run.GetRepository().GetFullName() == "shqld/me") {
+			out, err := exec.Command("docker", "service", "update", "app_me", "--image", image_url).Output()
+			if err != nil {
+				log.Printf("command failed: 'docker service update app_me --image %s' err=%s\n", image_url, err)
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+			w.Write(out)
+			fmt.Println(string(out))
 		}
-
-		w.Write(out)
-		fmt.Println(string(out))
-
-		out, err = exec.Command("docker-compose", "-f", "/ops/app/docker-compose.yaml", "up", "-d").Output()
-		if err != nil {
-			log.Printf("command failed: 'docker-compose -f /ops/app/docker-compose.yaml up -d' err=%s\n", err)
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-
-		w.Write(out)
-		fmt.Println(string(out))
 	}
 }
