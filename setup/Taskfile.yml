@@ -25,6 +25,14 @@ tasks:
         status:
             - grep -q 'Match User \*' < /etc/ssh/sshd_config
 
+    firewall:
+        cmds:
+            - |
+                firewall-cmd --list-ports | xargs -n1 | xargs -I{} firewall-cmd --remove-port={}
+                cat ./firewall.txt | xargs -n1 | xargs -I{} firewall-cmd --add-port={}
+        sources:
+            - ./firewall.txt
+
     ipv6:
         status:
             - grep -q 'net.ipv6.conf.all.disable_ipv6 = 0' /etc/sysctl.conf
