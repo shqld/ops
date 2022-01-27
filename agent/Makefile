@@ -4,6 +4,13 @@ run: .task/build
 build:
 	@make .task/build
 
+start: build
+	@systemctl start agent
+restart: build
+	@systemctl restart agent
+stop:
+	@systemctl stop agent
+
 .task/build: .task/setup .task/tidy *.go
 	@docker run -v /ops/agent:/go/src/app go-workspace go build -o bin .
 	@touch .task/build
