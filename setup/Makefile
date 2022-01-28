@@ -8,7 +8,7 @@ setup:
 	@make -f pkg.mk setup
 
 .task/setup/users:
-	@task -d users default
+	@make -f users.mk setup
 
 .task/setup/sshd:
 	@grep -q 'Match User \*' < /etc/ssh/sshd_config || \
