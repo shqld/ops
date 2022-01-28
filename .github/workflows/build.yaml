@@ -8,11 +8,4 @@ jobs:
     update-remote:
         runs-on: ubuntu-latest
         steps:
-            - name: Update /ops
-              uses: appleboy/ssh-action@master
-              with:
-                  host: shqld.dev
-                  username: robot
-                  key: ${{ secrets.ROBOT_PRIVATE_KEY }}
-                  script: |
-                      sudo task -d /ops update 
+            - run: echo Hello, world.

@@ -14,10 +14,11 @@ update: /usr/bin/task
 	@make setup
 
 git-pull:
-	@git diff --exit-code --quiet
-	@git pull --depth=10
-	@git gc --aggressive --prune=all
-	@du -sh .git
+	git diff --exit-code --quiet
+	git fetch origin main
+	git reset --hard origin/main
+	git gc --aggressive --prune=all
+	du -sh .git
 
 login-github:
 	@sudo dnf config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo

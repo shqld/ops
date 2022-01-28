@@ -50,6 +50,67 @@ func handleWebhookGithub(w http.ResponseWriter, req *http.Request) {
 	switch event := event.(type) {
 	case *github.WorkflowRunEvent:
 		handleWebhookGithubWorkflowRunEvent(w, event)
+	case *github.PushEvent:
+		handleWebhookGithubPushEvent(w, event)
+	}
+}
+
+func handleWebhookGithubPushEvent(w http.ResponseWriter, event *github.PushEvent) {
+	repo := event.GetRepo()
+
+	if repo.GetFullName() == "shqld/ops" && event.GetRef() == "refs/heads/main" {
+		log.Printf("running: 'git diff --exit-code --quiet'\n")
+		out, err := exec.Command("git", "diff", "--exit-code", "--quiet").Output()
+		log.Println(string(out))
+		if err != nil {
+			log.Printf("skipping the following commands because the workspace is dirty")
+			return
+		}
+
+		// FIXME: specify head sha
+		log.Printf("running: 'git fetch origin main'\n")
+		out, err = exec.Command("git", "fetch", "origin", "main").Output()
+		log.Println(string(out))
+		if err != nil {
+			log.Printf("command failed: 'git fetch origin main' err=%s\n", err)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		log.Printf("running: 'git reset --hard origin/main'\n")
+		out, err = exec.Command("git", "reset", "--hard", "origin/main").Output()
+		log.Println(string(out))
+		if err != nil {
+			log.Printf("command failed: 'git reset --hard origin/main' err=%s\n", err)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		log.Printf("running: 'git gc --aggressive --prune=all'\n")
+		out, err = exec.Command("git", "gc", "--aggressive", "--prune=all").Output()
+		log.Println(string(out))
+		if err != nil {
+			log.Printf("command failed: 'git gc --aggressive --prune=all' err=%s\n", err)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		log.Printf("running: 'du -sh /ops/.git'\n")
+		out, err = exec.Command("du", "-sh", "/ops/.git").Output()
+		log.Println(string(out))
+		if err != nil {
+			log.Printf("command failed: 'du -sh /ops/.git' err=%s\n", err)
+			return
+		}
+
+		log.Printf("running: 'make -C /ops setup'\n")
+		out, err = exec.Command("make", "-C", "/ops", "setup").Output()
+		log.Println(string(out))
+		if err != nil {
+			log.Printf("command failed: 'make -C /ops setup' err=%s\n", err)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 	}
 }
 
@@ -59,7 +120,7 @@ func handleWebhookGithubWorkflowRunEvent(w http.ResponseWriter, event *github.Wo
 	if workflow_run.GetStatus() == "completed" {
 		image_url := fmt.Sprintf("ghcr.io/%s/web:%s", workflow_run.GetRepository().GetFullName(), workflow_run.GetHeadSHA())
 
-		if (workflow_run.GetRepository().GetFullName() == "shqld/me") {
+		if workflow_run.GetRepository().GetFullName() == "shqld/me" {
 			log.Printf("running 'docker pull %s'\n", image_url)
 
 			out, err := exec.Command("docker", "pull", image_url).Output()

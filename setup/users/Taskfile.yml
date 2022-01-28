@@ -4,7 +4,6 @@ tasks:
     default:
         deps:
             - sho
-            - robot
             - daemon
             - app
 
@@ -15,12 +14,6 @@ tasks:
             - task: sho_change_ownership_of_ops
             - task: sho_init_ssh
             - task: sho_init_sudoers
-
-    robot:
-        cmds:
-            - task: robot_add_user
-            - task: robot_init_ssh
-            - task: robot_init_sudoers
 
     daemon:
         cmds:
@@ -41,7 +34,7 @@ tasks:
         desc: Add user(sho) to group(docker)
         deps:
             - sho_add_user
-            - :packages:docker
+            # - :packages:docker
         status:
             - grep -q 'docker:.*:sho' -q < /etc/group
         cmds:
@@ -78,38 +71,6 @@ tasks:
             - /etc/sudoers.d/sho
         cmds:
             - sh /ops/setup/users/sho/sudoers > /etc/sudoers.d/sho
-
-    robot_add_user:
-        desc: Add user(robot)
-        status:
-            - id -u robot
-        cmds:
-            - useradd robot
-
-    robot_init_ssh:
-        desc: Set up ssh authorization for user(robot)
-        deps:
-            - robot_add_user
-        status:
-            - test -d /home/robot/.ssh
-            - test -f /home/robot/.ssh/authorized_keys
-        sources:
-            - /ops/setup/users/robot/id.pub
-        cmds:
-            - mkdir -p /home/robot/.ssh
-            - cat /ops/setup/users/robot/id.pub > /home/robot/.ssh/authorized_keys
-            - chmod 600 /home/robot/.ssh/authorized_keys
-            - chmod 700 /home/robot/.ssh
-            - chown robot -R /home/robot/.ssh
-
-    robot_init_sudoers:
-        desc: Set up sudoers for user(robot)
-        sources:
-            - /ops/setup/users/robot/sudoers
-        generates:
-            - /etc/sudoers.d/robot
-        cmds:
-            - sh /ops/setup/users/robot/sudoers > /etc/sudoers.d/robot
 
     daemon_add_user:
         desc: Add user(daemon)
