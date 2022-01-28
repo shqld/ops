@@ -1,0 +1,3 @@
+Match User *
+  PasswordAuthentication no
+  PubkeyAuthentication yes
