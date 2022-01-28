@@ -5,7 +5,7 @@ setup:
 	@mkdir -p .task/setup
 
 .task/setup/pkgs:
-	@task -d packages default
+	@make -f pkg.mk setup
 
 .task/setup/users:
 	@task -d users default
