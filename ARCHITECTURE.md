@@ -7,18 +7,17 @@ TBD
 ## Directories
 
 ```
-/Taskfile.yml
+/Makefile
 /setup
-  |- packages
-  |- users
-  |- Taskfile.yml
+  |- Makefile
+  |- pkg.mk
+  |- users.mk
 /system
-  |- nginx
-  |- Taskfile.yml
+  |- Makefile
 /app
-  |- varnish
-  |- www
-  |- Taskfile.yml
+  |- Makefile
+/monitoring
+  |- Makefile
 ```
 
 https://github.com/shqld/ops/tree/main/
@@ -35,13 +34,11 @@ Applications are placed under `/system` and `/app`.
 
 -   `/system`
     -   maintained in this repo
-    -   daemon-like app e.g. nginx, which are originally intended to be run by `systemd`
+    -   daemon-like app e.g. nginx, varnish, which are originally intended to be run by `systemd`
 -   `/app`
     -   maintained in other repos
     -   typical app e.g. nodejs
 
 ## Task Management
 
-As we can see in the tree, most directories have `Taskfile.yml` which is for `task` (see https://taskfile.dev) instead of `make` + `Makefile`
-
-`task` nicely works for tasks with complex dependency and conditions. For example, see https://github.com/shqld/ops/tree/main/setup and https://github.com/shqld/ops/actions for how unnecessary tasks are controlled.
+As we can see in the tree, most directories have `Makefile`.
