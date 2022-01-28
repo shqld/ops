@@ -21,7 +21,7 @@ git-pull:
 
 login-github:
 	@sudo dnf config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
-	@sudo dnf install gh
+	@sudo dnf install -y gh
 	@gh auth login --web
 
 cert:
