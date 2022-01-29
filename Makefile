@@ -1,5 +1,4 @@
 OPS := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
-TEMP_DIR := $(shell mktemp -d)
 
 .PHONY: setup
 setup:
