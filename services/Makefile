@@ -3,30 +3,30 @@ OPS_ROOT := /ops
 setup: .task/docker-login up
 
 up:
-	@docker-compose -f $(OPS_ROOT)/services/docker-compose.yaml up -d
+	@docker-compose up -d
 	make .task/restart
 
 down:
-	@docker-compose -f $(OPS_ROOT)/services/docker-compose.yaml down
+	@docker-compose down
 
 restart: .task/restart
 
 .task/restart: .task/restart/nginx .task/restart/varnish .task/restart/dev .task/restart/me
 
 .task/restart/nginx: nginx/nginx.conf
-	@docker-compose -f $(OPS_ROOT)/services/docker-compose.yaml restart nginx
+	@docker-compose restart nginx
 	@mkdir -p .task/restart; touch .task/restart/nginx
 
 .task/restart/varnish: varnish/default.vcl varnish/chunks/*.vcl
-	@docker-compose -f $(OPS_ROOT)/services/docker-compose.yaml restart varnish
+	@docker-compose restart varnish
 	@mkdir -p .task/restart; touch .task/restart/varnish
 
 .task/restart/dev:
-	@docker-compose -f $(OPS_ROOT)/services/docker-compose.yaml restart dev
+	@docker-compose restart dev
 	@mkdir -p .task/restart; touch .task/restart/dev
 
 .task/restart/me:
-	@docker-compose -f $(OPS_ROOT)/services/docker-compose.yaml restart me
+	@docker-compose restart me
 	@mkdir -p .task/restart; touch .task/restart/me
 
 .task/docker-login:
