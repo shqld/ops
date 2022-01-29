@@ -22,17 +22,3 @@ login-github:
 	@sudo dnf config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
 	@sudo dnf install -y gh
 	@gh auth login --web
-
-cert:
-	@docker run -it --rm \
-			--name certbot \
-			-v '/etc/letsencrypt:/etc/letsencrypt' \
-			certbot/certbot \
-					certonly \
-							--manual \
-							--domain shqld.dev \
-							--domain *.shqld.dev \
-							--email me@shqld.dev \
-							--agree-tos \
-							--manual-public-ip-logging-ok \
-							--preferred-challenges dns

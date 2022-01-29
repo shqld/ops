@@ -1,7 +1,7 @@
 setup:
 	@make .task/setup
 
-.task/setup: .task/setup/pkgs .task/setup/users .task/setup/sshd .task/setup/agent .task/setup/firewall .task/setup/ipv6
+.task/setup: .task/setup/pkgs .task/setup/users .task/setup/sshd .task/setup/agent .task/setup/firewall .task/setup/ipv6 .task/setup/cert
 	@mkdir -p .task/setup
 
 .task/setup/pkgs:
@@ -43,3 +43,18 @@ setup:
 	@cat /etc/sysconfig/network
 	@cat /etc/sysconfig/network-scripts/ifcfg-ens3
 	@mkdir -p .task/setup; touch .task/setup/ipv6
+
+.task/setup/cert:
+	@docker run -it --rm \
+			--name certbot \
+			-v '/etc/letsencrypt:/etc/letsencrypt' \
+			certbot/certbot \
+					certonly \
+							--manual \
+							--domain shqld.dev \
+							--domain *.shqld.dev \
+							--email me@shqld.dev \
+							--agree-tos \
+							--manual-public-ip-logging-ok \
+							--preferred-challenges dns
+	@mkdir -p .task/setup; touch .task/setup/cert
