@@ -24,6 +24,7 @@ setup:
 	@mkdir -p .task/setup; touch .task/setup/agent
 
 .task/setup/firewall: ./firewall.txt
+	@systemctl start firewalld
 	@firewall-cmd --list-ports | xargs -n1 | xargs -I{} firewall-cmd --remove-port={}
 	@cat ./firewall.txt | xargs -n1 | xargs -I{} firewall-cmd --add-port={}
 	@mkdir -p .task/setup; touch .task/setup/firewall
