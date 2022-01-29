@@ -1,34 +1,30 @@
-setup:
-	@make .task/setup
+setup: .task/pkgs .task/users .task/sshd .task/agent .task/firewall .task/ipv6 .task/cert
 
-.task/setup: .task/setup/pkgs .task/setup/users .task/setup/sshd .task/setup/agent .task/setup/firewall .task/setup/ipv6 .task/setup/cert
-	@mkdir -p .task/setup
-
-.task/setup/pkgs:
+.task/pkgs:
 	@make -f pkg.mk setup
 
-.task/setup/users:
+.task/users:
 	@make -f users.mk setup
 
-.task/setup/sshd:
+.task/sshd:
 	@grep -q 'Match User \*' < /etc/ssh/sshd_config || \
 		cat < sshd_config >> /etc/ssh/sshd_config
 	@systemctl restart sshd
-	@mkdir -p .task/setup; touch .task/setup/sshd
+	@mkdir -p .task; touch .task/sshd
 
-.task/setup/agent: ## FIXME: (deps) make -C /ops/agent build
+.task/agent: ## FIXME: (deps) make -C /ops/agent build
 	@ln -sfnv /ops/agent/agent.service /etc/systemd/system/agent.service
 	@systemctl enable agent
 	@systemctl start agent
-	@mkdir -p .task/setup; touch .task/setup/agent
+	@mkdir -p .task; touch .task/agent
 
-.task/setup/firewall: ./firewall.txt
+.task/firewall: ./firewall.txt
 	@systemctl start firewalld
 	@firewall-cmd --list-ports | xargs -n1 | xargs -I{} firewall-cmd --remove-port={}
 	@cat ./firewall.txt | xargs -n1 | xargs -I{} firewall-cmd --add-port={}
-	@mkdir -p .task/setup; touch .task/setup/firewall
+	@mkdir -p .task; touch .task/firewall
 
-.task/setup/ipv6:
+.task/ipv6:
   # https://manual.sakura.ad.jp/vps/network/ipv6/centos-stream-8.html
 	cat /etc/sysctl.conf
 	@sed -i -e "/net.ipv6.conf.all.disable_ipv6/s/1/0/" /etc/sysctl.conf
@@ -41,9 +37,9 @@ setup:
 	@sed -i -e "s@^#@@g" /etc/sysconfig/network-scripts/ifcfg-ens3
 	@cat /etc/sysconfig/network
 	@cat /etc/sysconfig/network-scripts/ifcfg-ens3
-	@mkdir -p .task/setup; touch .task/setup/ipv6
+	@mkdir -p .task; touch .task/ipv6
 
-.task/setup/cert:
+.task/cert:
 	@docker run -it --rm \
 			--name certbot \
 			-v '/etc/letsencrypt:/etc/letsencrypt' \
@@ -56,4 +52,4 @@ setup:
 							--agree-tos \
 							--manual-public-ip-logging-ok \
 							--preferred-challenges dns
-	@mkdir -p .task/setup; touch .task/setup/cert
+	@mkdir -p .task; touch .task/cert

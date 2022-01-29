@@ -1,11 +1,8 @@
 NULL := /dev/null
 
-setup:
-	@make -f users.mk .task/setup
+setup: .task/sho .task/daemon .task/app
 
-.task/setup: .task/setup/sho .task/setup/daemon .task/setup/app
-
-.task/setup/sho: ## FIXME: (deps) make -C /ops/agent build
+.task/sho: ## FIXME: (deps) make -C /ops/agent build
 	@id -u sho > $(NULL) || useradd sho
 	@grep -q 'docker:.*:sho' -q < /etc/group || usermod -a -G docker sho
 	@ls -la / | grep ops | grep -q sho || chown sho -R /ops
@@ -15,8 +12,8 @@ setup:
 	@chmod 600 /home/sho/.ssh/authorized_keys
 	@cat < /ops/setup/sho.sudoers > /etc/sudoers.d/sho
 
-.task/setup/daemon:
+.task/daemon:
 	@id -u daemon > $(NULL) || useradd daemon
 
-.task/setup/app:
+.task/app:
 	@id -u app > $(NULL) || useradd app
