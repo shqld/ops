@@ -20,8 +20,12 @@ services:
               source: /var/log/nginx
               target: /var/log/nginx
             - type: bind
-              source: /etc/letsencrypt/live
-              target: /etc/letsencrypt/live
+              source: /etc/letsencrypt/live/shqld.dev/fullchain.pem
+              target: /etc/letsencrypt/live/shqld.dev/fullchain.pem
+              read_only: true
+            - type: bind
+              source: /etc/letsencrypt/live/shqld.dev/privkey.pem
+              target: /etc/letsencrypt/live/shqld.dev/privkey.pem
               read_only: true
         depends_on:
             - varnish
