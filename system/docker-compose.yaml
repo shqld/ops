@@ -14,9 +14,17 @@ services:
         depends_on:
             - varnish
         volumes:
-            - /ops/system/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-            - /var/log/nginx:/var/log/nginx
-            - /etc/letsencrypt/live:/etc/letsencrypt/live:ro
+            - type: bind
+              source: /ops/system/nginx/nginx.conf
+              target: /etc/nginx/nginx.conf
+              read_only: true
+            - type: bind
+              source: /var/log/nginx
+              target: /var/log/nginx
+            - type: bind
+              source: /etc/letsencrypt/live
+              target: /etc/letsencrypt/live
+              read_only: true
         deploy:
             replicas: 1
 
@@ -24,7 +32,12 @@ services:
         image: ghcr.io/shqld/varnish:latest
         tmpfs: /var/lib/varnish:exec
         volumes:
-            - /ops/system/varnish:/etc/varnish:ro
-            - /var/log/varnish:/var/log/varnish
+            - type: bind
+              source: /ops/system/varnish
+              target: /etc/varnish
+              read_only: true
+            - type: bind
+              source: /var/log/varnish
+              target: /var/log/varnish
         deploy:
             replicas: 1
