@@ -11,6 +11,8 @@ services:
               published: 443
               protocol: udp
               mode: host
+        depends_on:
+            - varnish
         volumes:
             - /ops/system/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
             - /var/log/nginx:/var/log/nginx
