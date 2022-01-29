@@ -2,7 +2,6 @@ version: '3.8'
 services:
     nginx:
         image: ranadeeppolavarapu/nginx-http3
-        tmpfs: /var/lib/varnish:exec
         ports:
             - target: 443
               published: 443
