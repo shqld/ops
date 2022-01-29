@@ -11,8 +11,8 @@ setup:
 	@ls -la / | grep ops | grep -q sho || chown sho -R /ops
 	@test -d /home/sho/.ssh || \
         (mkdir -p /home/sho/.ssh && chmod 700 /home/sho/.ssh && chown sho -R /home/sho/.ssh)
-	@test -f /home/sho/.ssh/authorized_keys || chmod 600 /home/sho/.ssh/authorized_keys
 	@curl https://github.com/shqld.keys 2> $(NULL) > /home/sho/.ssh/authorized_keys
+	@chmod 600 /home/sho/.ssh/authorized_keys
 	@cat < /ops/setup/sho.sudoers > /etc/sudoers.d/sho
 
 .task/setup/daemon:
