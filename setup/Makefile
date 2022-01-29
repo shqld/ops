@@ -45,9 +45,11 @@ setup: .task/pkgs .task/users .task/sshd .task/agent .task/firewall .task/ipv6 .
 .task/cert:
 	@docker run -it --rm \
 			--name certbot \
+			-v '/var/log/letsencrypt:/var/log/letsencrypt' \
 			-v '/etc/letsencrypt:/etc/letsencrypt' \
 			certbot/certbot \
 					certonly \
+							--verbose \
 							--manual \
 							--domain shqld.dev \
 							--domain *.shqld.dev \
