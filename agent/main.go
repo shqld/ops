@@ -49,13 +49,18 @@ func handleWebhookGithub(w http.ResponseWriter, req *http.Request) {
 
 	switch event := event.(type) {
 	case *github.WorkflowRunEvent:
-		handleWebhookGithubWorkflowRunEvent(w, event)
+		err = handleWebhookGithubWorkflowRunEvent(w, event)
 	case *github.PushEvent:
-		handleWebhookGithubPushEvent(w, event)
+		err = handleWebhookGithubPushEvent(w, event)
+	}
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 }
 
-func handleWebhookGithubPushEvent(w http.ResponseWriter, event *github.PushEvent) {
+func handleWebhookGithubPushEvent(w http.ResponseWriter, event *github.PushEvent) error {
 	repo := event.GetRepo()
 
 	if repo.GetFullName() == "shqld/ops" && event.GetRef() == "refs/heads/main" {
@@ -64,7 +69,7 @@ func handleWebhookGithubPushEvent(w http.ResponseWriter, event *github.PushEvent
 		log.Println(string(out))
 		if err != nil {
 			log.Printf("skipping the following commands because the workspace is dirty")
-			return
+			return err
 		}
 
 		// FIXME: specify head sha
@@ -73,8 +78,7 @@ func handleWebhookGithubPushEvent(w http.ResponseWriter, event *github.PushEvent
 		log.Println(string(out))
 		if err != nil {
 			log.Printf("command failed: 'git fetch origin main' err=%s\n", err)
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
+			return err
 		}
 
 		log.Printf("running: 'git reset --hard origin/main'\n")
@@ -82,8 +86,7 @@ func handleWebhookGithubPushEvent(w http.ResponseWriter, event *github.PushEvent
 		log.Println(string(out))
 		if err != nil {
 			log.Printf("command failed: 'git reset --hard origin/main' err=%s\n", err)
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
+			return err
 		}
 
 		log.Printf("running: 'git gc --aggressive --prune=all'\n")
@@ -91,8 +94,7 @@ func handleWebhookGithubPushEvent(w http.ResponseWriter, event *github.PushEvent
 		log.Println(string(out))
 		if err != nil {
 			log.Printf("command failed: 'git gc --aggressive --prune=all' err=%s\n", err)
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
+			return err
 		}
 
 		log.Printf("running: 'du -sh /ops/.git'\n")
@@ -100,7 +102,7 @@ func handleWebhookGithubPushEvent(w http.ResponseWriter, event *github.PushEvent
 		log.Println(string(out))
 		if err != nil {
 			log.Printf("command failed: 'du -sh /ops/.git' err=%s\n", err)
-			return
+			return err
 		}
 
 		log.Printf("running: 'make -C /ops setup'\n")
@@ -108,13 +110,14 @@ func handleWebhookGithubPushEvent(w http.ResponseWriter, event *github.PushEvent
 		log.Println(string(out))
 		if err != nil {
 			log.Printf("command failed: 'make -C /ops setup' err=%s\n", err)
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
+			return err
 		}
 	}
+
+	return nil
 }
 
-func handleWebhookGithubWorkflowRunEvent(w http.ResponseWriter, event *github.WorkflowRunEvent) {
+func handleWebhookGithubWorkflowRunEvent(w http.ResponseWriter, event *github.WorkflowRunEvent) error {
 	workflow_run := event.GetWorkflowRun()
 
 	if workflow_run.GetStatus() == "completed" {
@@ -126,8 +129,7 @@ func handleWebhookGithubWorkflowRunEvent(w http.ResponseWriter, event *github.Wo
 			out, err := exec.Command("docker", "pull", image_url).Output()
 			if err != nil {
 				log.Printf("command failed: 'docker pull %s' err=%s\n", image_url, err)
-				http.Error(w, err.Error(), http.StatusInternalServerError)
-				return
+				return err
 			}
 			log.Println(string(out))
 
@@ -136,8 +138,7 @@ func handleWebhookGithubWorkflowRunEvent(w http.ResponseWriter, event *github.Wo
 			out, err = exec.Command("docker", "service", "update", "app_me", "--image", image_url).Output()
 			if err != nil {
 				log.Printf("command failed: 'docker service update app_me --image %s' err=%s\n", image_url, err)
-				http.Error(w, err.Error(), http.StatusInternalServerError)
-				return
+				return err
 			}
 			log.Println(string(out))
 
@@ -146,10 +147,11 @@ func handleWebhookGithubWorkflowRunEvent(w http.ResponseWriter, event *github.Wo
 			out, err = exec.Command("docker", "system", "prune", "-f").Output()
 			if err != nil {
 				log.Printf("command failed: 'docker system prune -f' err=%s\n", err)
-				http.Error(w, err.Error(), http.StatusInternalServerError)
-				return
+				return err
 			}
 			log.Println(string(out))
 		}
 	}
+
+	return nil
 }
