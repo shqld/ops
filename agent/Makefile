@@ -1,5 +1,5 @@
 run: .task/build
-	@./bin
+	@$(PWD)/bin
 
 build:
 	@make .task/build
@@ -11,17 +11,10 @@ restart: build
 stop:
 	@systemctl stop agent
 
-.task/build: .task/setup .task/tidy *.go
-	@docker run -v /ops/agent:/go/src/app go-workspace go build -o bin .
+.task/build: .task/tidy *.go
+	@docker run -v $(PWD):/app -w /app -e CGO_ENABLED=0 golang:1.17-alpine go build -o bin .
 	@mkdir -p .task; touch .task/build
 
-.task/tidy: .task/setup go.mod
-	@docker run -v /ops/agent:/go/src/app go-workspace go mod tidy
+.task/tidy: go.mod
+	@docker run -v $(PWD):/app -w /app -e CGO_ENABLED=0 golang:1.17-alpine go mod tidy
 	@mkdir -p .task; touch .task/tidy
-
-.task/setup: .task/setup/image
-	@mkdir -p .task/setup
-
-.task/setup/image: Dockerfile
-	@docker build -t go-workspace .
-	@mkdir -p .task/setup; touch .task/setup/image
