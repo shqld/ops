@@ -14,13 +14,8 @@ services:
               mode: host
         volumes:
             - /ops/system/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-            - /etc/letsencrypt/live/shqld.dev/fullchain.pem:/etc/letsencrypt/live/shqld.dev/fullchain.pem:ro
-            - /etc/letsencrypt/live/shqld.dev/privkey.pem:/etc/letsencrypt/live/shqld.dev/privkey.pem:ro
-            - /etc/letsencrypt/live/me.shqld.dev/fullchain.pem:/etc/letsencrypt/live/me.shqld.dev/fullchain.pem:ro
-            - /etc/letsencrypt/live/me.shqld.dev/privkey.pem:/etc/letsencrypt/live/me.shqld.dev/privkey.pem:ro
-            - /etc/letsencrypt/live/agent.shqld.dev/fullchain.pem:/etc/letsencrypt/live/agent.shqld.dev/fullchain.pem:ro
-            - /etc/letsencrypt/live/agent.shqld.dev/privkey.pem:/etc/letsencrypt/live/agent.shqld.dev/privkey.pem:ro
             - /var/log/nginx:/var/log/nginx
+            - /etc/letsencrypt/live:/etc/letsencrypt/live:ro
         deploy:
             replicas: 1
 
@@ -28,8 +23,7 @@ services:
         image: ghcr.io/shqld/varnish:latest
         tmpfs: /var/lib/varnish:exec
         volumes:
-            - /ops/system/varnish/default.vcl:/etc/varnish/default.vcl:ro
-            - /ops/system/varnish/chunks:/etc/varnish/chunks:ro
+            - /ops/system/varnish:/etc/varnish:ro
             - /var/log/varnish:/var/log/varnish
         deploy:
             replicas: 1
