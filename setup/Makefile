@@ -43,7 +43,8 @@ setup: .task/pkgs .task/users .task/sshd .task/agent .task/firewall .task/ipv6 .
 	@mkdir -p .task; touch .task/ipv6
 
 .task/cert:
-	@docker run -it --rm \
+    # https://stackoverflow.com/a/57565119
+	@docker run -i --rm \
 			--name certbot \
 			-v '/var/log/letsencrypt:/var/log/letsencrypt' \
 			-v '/etc/letsencrypt:/etc/letsencrypt' \
