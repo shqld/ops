@@ -1,6 +1,6 @@
 backend me {
   .host = "me";
-  .port = "3001";
+  .port = "3000";
 }
 
 sub me_recv {

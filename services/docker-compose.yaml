@@ -47,14 +47,10 @@ services:
 
     www:
         image: ghcr.io/shqld/dev/web:latest
-        ports:
-            - '3000:3000'
         environment:
             - PORT=3000
 
     me:
         image: ghcr.io/shqld/me/web:latest
-        ports:
-            - '3001:3001'
         environment:
-            - PORT=3001
+            - PORT=3000
