@@ -1,4 +1,5 @@
-OPS_ROOT := /ops
+CUR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+OPS := $(realpath $(CUR)/..)
 
 setup: .task/docker-login up
 

@@ -1,3 +1,6 @@
+CUR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+OPS := $(realpath $(CUR)/..)
+
 setup: .task/pkgs .task/users .task/sshd .task/agent .task/firewall .task/ipv6 .task/cert
 
 .task/pkgs:
@@ -13,15 +16,15 @@ setup: .task/pkgs .task/users .task/sshd .task/agent .task/firewall .task/ipv6 .
 	@mkdir -p .task; touch .task/sshd
 
 .task/agent: ## FIXME: (deps) make -C /ops/agent build
-	@ln -sfnv /ops/agent/agent.service /etc/systemd/system/agent.service
+	@ln -sfnv $(OPS)/agent/agent.service /etc/systemd/system/agent.service
 	@systemctl enable agent
 	@systemctl start agent
 	@mkdir -p .task; touch .task/agent
 
-.task/firewall: ./firewall.txt
+.task/firewall: firewall.txt
 	@systemctl start firewalld
 	@firewall-cmd --list-ports | xargs -n1 | xargs -I{} firewall-cmd --remove-port={}
-	@cat ./firewall.txt | xargs -n1 | xargs -I{} firewall-cmd --add-port={}
+	@cat firewall.txt | xargs -n1 | xargs -I{} firewall-cmd --add-port={}
 	@mkdir -p .task; touch .task/firewall
 
 .task/ipv6:

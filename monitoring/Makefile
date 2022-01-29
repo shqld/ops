@@ -1,4 +1,5 @@
-OPS_ROOT := /ops
+CUR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+OPS := $(realpath $(CUR)/..)
 
 setup: .task/newrelic .task/install-newrelic
 
@@ -11,5 +12,5 @@ setup: .task/newrelic .task/install-newrelic
 
 .task/newrelic: .task/install-newrelic
 	@mkdir -p /etc/newrelic-infra/logging.d
-	@ln -sfnv $(OPS_ROOT)/monitoring/newrelic/logging.yml /etc/newrelic-infra/logging.d/logging.yml
+	@ln -sfnv $(CUR)/newrelic/logging.yml /etc/newrelic-infra/logging.d/logging.yml
 	@mkdir -p .task; touch .task/newrelic

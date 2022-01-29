@@ -1,7 +1,7 @@
 setup: .task/misc .task/docker .task/docker-compose
 
-.task/misc: /ops/setup/pkg-list.txt
-	@xargs dnf install -y < /ops/setup/pkg-list.txt
+.task/misc: pkg-list.txt
+	@xargs dnf install -y < pkg-list.txt
 	@mkdir -p .task; touch .task/misc
 
 .task/docker:

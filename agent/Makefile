@@ -1,5 +1,7 @@
+CUR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+
 run: .task/build
-	@$(PWD)/bin
+	@$(CUR)/bin
 
 build:
 	@make .task/build
@@ -12,9 +14,9 @@ stop:
 	@systemctl stop agent
 
 .task/build: .task/tidy *.go
-	@docker run -v $(PWD):/app -w /app -e CGO_ENABLED=0 golang:1.17-alpine go build -o bin .
+	@docker run -v $(CUR):/app -w /app -e CGO_ENABLED=0 golang:1.17-alpine go build -o bin .
 	@mkdir -p .task; touch .task/build
 
 .task/tidy: go.mod
-	@docker run -v $(PWD):/app -w /app -e CGO_ENABLED=0 golang:1.17-alpine go mod tidy
+	@docker run -v $(CUR):/app -w /app -e CGO_ENABLED=0 golang:1.17-alpine go mod tidy
 	@mkdir -p .task; touch .task/tidy

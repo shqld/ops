@@ -13,7 +13,7 @@ services:
               mode: host
         volumes:
             - type: bind
-              source: /ops/services/nginx/nginx.conf
+              source: ./nginx/nginx.conf
               target: /etc/nginx/nginx.conf
               read_only: true
             - type: bind
@@ -35,7 +35,7 @@ services:
         tmpfs: /var/lib/varnish:exec
         volumes:
             - type: bind
-              source: /ops/services/varnish
+              source: ./varnish
               target: /etc/varnish
               read_only: true
             - type: bind

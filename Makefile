@@ -1,11 +1,11 @@
-OPS_ROOT := /ops
+OPS := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 TEMP_DIR := $(shell mktemp -d)
 
 .PHONY: setup
 setup:
-	@make -C $(OPS_ROOT)/setup
-	@make -C $(OPS_ROOT)/services setup
-	@make -C $(OPS_ROOT)/monitoring setup
+	@make -C $(OPS)/setup
+	@make -C $(OPS)/services setup
+	@make -C $(OPS)/monitoring setup
 
 update:
 	@git-pull
