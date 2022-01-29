@@ -32,6 +32,7 @@ cert:
 					certonly \
 							--manual \
 							--domain shqld.dev \
+							--domain *.shqld.dev \
 							--email me@shqld.dev \
 							--agree-tos \
 							--manual-public-ip-logging-ok \
