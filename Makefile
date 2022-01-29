@@ -4,9 +4,8 @@ TEMP_DIR := $(shell mktemp -d)
 .PHONY: setup
 setup:
 	@make -C $(OPS_ROOT)/setup
-	@make -C $(OPS_ROOT)/system setup
+	@make -C $(OPS_ROOT)/services setup
 	@make -C $(OPS_ROOT)/monitoring setup
-	@make -C $(OPS_ROOT)/app setup
 
 update:
 	@git-pull

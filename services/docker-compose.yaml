@@ -11,11 +11,9 @@ services:
               published: 443
               protocol: udp
               mode: host
-        depends_on:
-            - varnish
         volumes:
             - type: bind
-              source: /ops/system/nginx/nginx.conf
+              source: /ops/services/nginx/nginx.conf
               target: /etc/nginx/nginx.conf
               read_only: true
             - type: bind
@@ -25,6 +23,8 @@ services:
               source: /etc/letsencrypt/live
               target: /etc/letsencrypt/live
               read_only: true
+        depends_on:
+            - varnish
         deploy:
             replicas: 1
 
@@ -33,11 +33,32 @@ services:
         tmpfs: /var/lib/varnish:exec
         volumes:
             - type: bind
-              source: /ops/system/varnish
+              source: /ops/services/varnish
               target: /etc/varnish
               read_only: true
             - type: bind
               source: /var/log/varnish
               target: /var/log/varnish
+        depends_on:
+            - www
+            - me
+        deploy:
+            replicas: 1
+
+    www:
+        image: ghcr.io/shqld/dev/web:latest
+        ports:
+            - '3000:3000'
+        environment:
+            - PORT=3000
+        deploy:
+            replicas: 1
+
+    me:
+        image: ghcr.io/shqld/me/web:latest
+        ports:
+            - '3001:3001'
+        environment:
+            - PORT=3001
         deploy:
             replicas: 1
