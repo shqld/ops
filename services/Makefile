@@ -1,16 +1,12 @@
 OPS_ROOT := /ops
 
-setup: .task/docker-login .task/vol-dirs up
+setup: .task/docker-login up
 
-up: .task/vol-dirs
+up:
 	@docker stack up services -c $(OPS_ROOT)/services/docker-compose.yaml
 
 down:
 	@docker stack down services
-
-.task/vol-dirs: docker-compose.yaml
-	@cat docker-compose.yaml | grep "source: " | cut -d':' -f2 | xargs -n1 mkdir -p
-	@mkdir -p .task; touch .task/vol-dirs
 
 .task/docker-login:
 	@test -n "${DOCKER_REGISTRY_TOKEN}"
