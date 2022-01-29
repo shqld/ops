@@ -29,8 +29,6 @@ services:
               read_only: true
         depends_on:
             - varnish
-        deploy:
-            replicas: 1
 
     varnish:
         image: ghcr.io/shqld/varnish:latest
@@ -46,8 +44,6 @@ services:
         depends_on:
             - www
             - me
-        deploy:
-            replicas: 1
 
     www:
         image: ghcr.io/shqld/dev/web:latest
@@ -55,8 +51,6 @@ services:
             - '3000:3000'
         environment:
             - PORT=3000
-        deploy:
-            replicas: 1
 
     me:
         image: ghcr.io/shqld/me/web:latest
@@ -64,5 +58,3 @@ services:
             - '3001:3001'
         environment:
             - PORT=3001
-        deploy:
-            replicas: 1

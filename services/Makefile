@@ -3,10 +3,10 @@ OPS_ROOT := /ops
 setup: .task/docker-login up
 
 up:
-	@docker stack up services -c $(OPS_ROOT)/services/docker-compose.yaml
+	@docker-compose -f $(OPS_ROOT)/services/docker-compose.yaml up -d
 
 down:
-	@docker stack down services
+	@docker-compose -f $(OPS_ROOT)/services/docker-compose.yaml down
 
 .task/docker-login:
 	@test -n "${DOCKER_REGISTRY_TOKEN}"
