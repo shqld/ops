@@ -4,9 +4,9 @@ run: .task/build
 build:
 	@make .task/build
 
-start: build
+start:
 	@systemctl start agent
-restart: build
+restart:
 	@systemctl restart agent
 stop:
 	@systemctl stop agent

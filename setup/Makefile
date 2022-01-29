@@ -17,7 +17,6 @@ setup:
 	@mkdir -p .task/setup; touch .task/setup/sshd
 
 .task/setup/agent: ## FIXME: (deps) make -C /ops/agent build
-	@make -C /ops/agent build
 	@ln -sfnv /ops/agent/agent.service /etc/systemd/system/agent.service
 	@systemctl enable agent
 	@systemctl start agent
