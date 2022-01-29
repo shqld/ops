@@ -14,9 +14,9 @@ setup:
     # https://github.com/containers/podman/issues/4791
 	@yum -y remove podman
 	@yum install -y docker-ce docker-ce-cli containerd.io
+	@-docker swarm init
 	@systemctl enable docker
 	@systemctl start docker
-	@-docker swarm init
 	@mkdir -p .task/setup; touch .task/setup/docker
 
 .task/setup/docker-compose: .task/setup/docker
