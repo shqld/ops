@@ -13,5 +13,6 @@ setup: .task/setup
 	@mkdir -p .task/setup; touch .task/setup/install-newrelic
 
 .task/setup/newrelic: .task/setup/install-newrelic
+	@mkdir -p /etc/newrelic-infra/logging.d
 	@ln -sfnv $(OPS_ROOT)/monitoring/newrelic/logging.yml /etc/newrelic-infra/logging.d/logging.yml
 	@mkdir -p .task/setup; touch .task/setup/newrelic
