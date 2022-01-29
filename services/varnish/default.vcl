@@ -17,7 +17,7 @@ include "chunks/example.vcl";
 include "chunks/me.vcl";
 
 backend default {
-  .host = "www";
+  .host = "dev";
   .port = "3000";
 }
 

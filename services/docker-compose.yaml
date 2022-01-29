@@ -42,10 +42,10 @@ services:
               source: /var/log/varnish
               target: /var/log/varnish
         depends_on:
-            - www
+            - dev
             - me
 
-    www:
+    dev:
         image: ghcr.io/shqld/dev/web:latest
         environment:
             - PORT=3000

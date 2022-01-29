@@ -11,7 +11,7 @@ down:
 
 restart: .task/restart
 
-.task/restart: .task/restart/nginx .task/restart/varnish .task/restart/www .task/restart/me
+.task/restart: .task/restart/nginx .task/restart/varnish .task/restart/dev .task/restart/me
 
 .task/restart/nginx: nginx/nginx.conf
 	@docker-compose -f $(OPS_ROOT)/services/docker-compose.yaml restart nginx
@@ -21,9 +21,9 @@ restart: .task/restart
 	@docker-compose -f $(OPS_ROOT)/services/docker-compose.yaml restart varnish
 	@mkdir -p .task/restart; touch .task/restart/varnish
 
-.task/restart/www:
-	@docker-compose -f $(OPS_ROOT)/services/docker-compose.yaml restart www
-	@mkdir -p .task/restart; touch .task/restart/www
+.task/restart/dev:
+	@docker-compose -f $(OPS_ROOT)/services/docker-compose.yaml restart dev
+	@mkdir -p .task/restart; touch .task/restart/dev
 
 .task/restart/me:
 	@docker-compose -f $(OPS_ROOT)/services/docker-compose.yaml restart me
