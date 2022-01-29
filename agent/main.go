@@ -123,34 +123,47 @@ func handleWebhookGithubWorkflowRunEvent(w http.ResponseWriter, event *github.Wo
 	if workflow_run.GetStatus() == "completed" {
 		image_url := fmt.Sprintf("ghcr.io/%s/web:%s", workflow_run.GetRepository().GetFullName(), workflow_run.GetHeadSHA())
 
-		if workflow_run.GetRepository().GetFullName() == "shqld/me" {
-			log.Printf("running 'docker pull %s'\n", image_url)
+		full_name := workflow_run.GetRepository().GetFullName()
+		name := workflow_run.GetRepository().GetName()
 
-			out, err := exec.Command("docker", "pull", image_url).Output()
-			if err != nil {
-				log.Printf("command failed: 'docker pull %s' err=%s\n", image_url, err)
-				return err
-			}
-			log.Println(string(out))
-
-			log.Printf("running 'docker service update app_me --image %s'\n", image_url)
-
-			out, err = exec.Command("docker", "service", "update", "app_me", "--image", image_url).Output()
-			if err != nil {
-				log.Printf("command failed: 'docker service update app_me --image %s' err=%s\n", image_url, err)
-				return err
-			}
-			log.Println(string(out))
-
-			log.Printf("running 'docker system prune -f'\n")
-
-			out, err = exec.Command("docker", "system", "prune", "-f").Output()
-			if err != nil {
-				log.Printf("command failed: 'docker system prune -f' err=%s\n", err)
-				return err
-			}
-			log.Println(string(out))
+		switch full_name {
+		case "shqld/varnish":
+			return updateService(fmt.Sprintf("system_%s", name), image_url)
+		case "shqld/dev":
+		case "shqld/me":
+			return updateService(fmt.Sprintf("app_%s", name), image_url)
 		}
+	}
+
+	return nil
+}
+
+func updateService(service_name string, image_url string) error {
+	log.Printf("running 'docker pull %s'\n", image_url)
+
+	out, err := exec.Command("docker", "pull", image_url).Output()
+	log.Println(string(out))
+	if err != nil {
+		log.Printf("command failed: 'docker pull %s' err=%s\n", image_url, err)
+		return err
+	}
+
+	log.Printf("running 'docker service update %s --image %s'\n", service_name, image_url)
+
+	out, err = exec.Command("docker", "service", "update", service_name, "--image", image_url).Output()
+	log.Println(string(out))
+	if err != nil {
+		log.Printf("command failed: 'docker service update %s --image %s' err=%s\n", service_name, image_url, err)
+		return err
+	}
+
+	log.Printf("running 'docker system prune -f'\n")
+
+	out, err = exec.Command("docker", "system", "prune", "-f").Output()
+	log.Println(string(out))
+	if err != nil {
+		log.Printf("command failed: 'docker system prune -f' err=%s\n", err)
+		return err
 	}
 
 	return nil
