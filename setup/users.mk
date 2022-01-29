@@ -12,7 +12,7 @@ setup: .task/sho .task/daemon .task/app
         (mkdir -p /home/sho/.ssh && chmod 700 /home/sho/.ssh && chown sho -R /home/sho/.ssh)
 	@curl https://github.com/shqld.keys 2> $(NULL) > /home/sho/.ssh/authorized_keys
 	@chmod 600 /home/sho/.ssh/authorized_keys
-	@cat < sho.sudoers > /etc/sudoers.d/sho
+	@sh sho.sudoers > /etc/sudoers.d/sho
 
 .task/daemon:
 	@id -u daemon > $(NULL) || useradd daemon
