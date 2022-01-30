@@ -31,6 +31,6 @@ restart: .task/restart
 	@mkdir -p .task/restart; touch .task/restart/me
 
 .task/docker-login:
-	@test -n "${DOCKER_REGISTRY_TOKEN}"
+	@test -v DOCKER_REGISTRY_TOKEN || (echo "DOCKER_REGISTRY_TOKEN not set" && exit 1)
 	@echo "${DOCKER_REGISTRY_TOKEN}" | docker login -u shqld --password-stdin ghcr.io
 	@mkdir -p .task; touch .task/docker-login
