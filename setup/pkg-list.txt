@@ -1,3 +1,5 @@
 jq
 zsh
 lsof
+bind-utils
+net-tools
