@@ -88,7 +88,7 @@ sub vcl_deliver {
   unset resp.http.via;
   unset resp.http.x-varnish;
 
-  set resp.http.x-shqld = "Hello from @shqld";
+  set resp.http.x-shqld = {""Hello from @shqld""}; # https://www.rfc-editor.org/rfc/rfc8941.html#section-3.3.3
 
   call example_deliver;
 
