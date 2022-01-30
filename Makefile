@@ -1,7 +1,7 @@
 OPS := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 
 .PHONY: setup
-setup:
+setup: .task/login-github .task/auth-git
 	@make -C $(OPS)/setup
 	@make -C $(OPS)/services setup
 	@make -C $(OPS)/monitoring setup
@@ -17,7 +17,14 @@ git-pull:
 	git gc --aggressive --prune=all
 	du -sh .git
 
-login-github:
+.task/login-github:
 	@sudo dnf config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
 	@sudo dnf install -y gh
-	@gh auth login --web
+	@gh auth login --web --scopes admin:public_key
+	@mkdir -p .task; touch .task/login-github
+
+.task/auth-git: .task/login-github
+	@mkdir -p $(HOME)/.ssh && chmod 700 $(HOME)/.ssh
+	@ssh-keygen -b 4096 -t ed25519 -N '' -C 'shqld@$(shell hostname)' -f $(HOME)/.ssh/github
+	@gh api -X POST /user/keys -F title=shqld@$(shell hostname) -F key="$(file < $(HOME)/.ssh/github.pub)"
+	@mkdir -p .task; touch .task/auth-git
