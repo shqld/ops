@@ -22,7 +22,7 @@ setup: .task/pkgs .task/users .task/sshd .task/agent .task/firewall .task/ipv6 .
 	@mkdir -p .task; touch .task/agent
 
 .task/firewall: firewall.txt
-	@sed /etc/firewalld/firewalld.conf -e 's/AllowZoneDrifting=yes/AllowZoneDrifting=no/'
+	@sed -i'.org' /etc/firewalld/firewalld.conf -e 's/AllowZoneDrifting=yes/AllowZoneDrifting=no/'
 	@systemctl start firewalld
 	# Reset current configurations each time (this is why making changes without '--permanent')
 	firewall-cmd --reload
@@ -37,14 +37,14 @@ setup: .task/pkgs .task/users .task/sshd .task/agent .task/firewall .task/ipv6 .
 .task/ipv6:
   # https://manual.sakura.ad.jp/vps/network/ipv6/centos-stream-8.html
 	cat /etc/sysctl.conf
-	@sed -i -e "/net.ipv6.conf.all.disable_ipv6/s/1/0/" /etc/sysctl.conf
-	@sed -i -e "/net.ipv6.conf.default.disable_ipv6/s/1/0/" /etc/sysctl.conf
+	@sed -i'.org' -e "/net.ipv6.conf.all.disable_ipv6/s/1/0/" /etc/sysctl.conf
+	@sed -i'.org' -e "/net.ipv6.conf.default.disable_ipv6/s/1/0/" /etc/sysctl.conf
 	cat /etc/sysctl.conf
 	@ip addr show ens3
 	cat /etc/sysconfig/network
 	cat /etc/sysconfig/network-scripts/ifcfg-ens3
-	@sed -i -e "s@^#@@g" /etc/sysconfig/network
-	@sed -i -e "s@^#@@g" /etc/sysconfig/network-scripts/ifcfg-ens3
+	@sed -i'.org' -e "s@^#@@g" /etc/sysconfig/network
+	@sed -i'.org' -e "s@^#@@g" /etc/sysconfig/network-scripts/ifcfg-ens3
 	@cat /etc/sysconfig/network
 	@cat /etc/sysconfig/network-scripts/ifcfg-ens3
 	@mkdir -p .task; touch .task/ipv6
