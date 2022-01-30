@@ -27,7 +27,7 @@ git-pull:
     # Partially ported from https://github.com/shqld/dotfiles/blob/5ffe897064b81b3cfa25701fc8947a099cd1cd26/Makefile#L59-L64
 	@mkdir -p $(HOME)/.ssh && chmod 700 $(HOME)/.ssh
 	@cat .ssh_config > $(HOME)/.ssh/config
-	@$(foreach val, $(shell grep IdentityFile $(HOME)/.ssh/config | sed 's/IdentityFile //g'), \
+	@$(foreach val, $(shell grep IdentityFile .ssh_config | sed 's/IdentityFile //g'), \
         test -f $(val) || ( \
             mkdir -p $(dir $(val)); ssh-keygen -b 4096 -t ed25519 -N '' -C 'shqld@$(shell hostname)' -f $(val) \
         ); \
