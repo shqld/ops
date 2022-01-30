@@ -23,8 +23,11 @@ git-pull:
 	@gh auth login --web --scopes admin:public_key
 	@mkdir -p .task; touch .task/login-github
 
-.task/auth-git: .task/login-github
+.task/keygen:
 	@mkdir -p $(HOME)/.ssh && chmod 700 $(HOME)/.ssh
 	@ssh-keygen -b 4096 -t ed25519 -N '' -C 'shqld@$(shell hostname)' -f $(HOME)/.ssh/github
-	@gh api -X POST /user/keys -F title=shqld@$(shell hostname) -F key="$(file < $(HOME)/.ssh/github.pub)"
+	@mkdir -p .task; touch .task/keygen
+
+.task/auth-git: .task/keygen .task/login-github
+	@gh api -X POST /user/keys -F title=shqld@$(shell hostname) -F key="$(file < $(HOME)/.ssh/git@github.com/id.pub)"
 	@mkdir -p .task; touch .task/auth-git
