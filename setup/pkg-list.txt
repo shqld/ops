@@ -3,3 +3,4 @@ zsh
 lsof
 bind-utils
 net-tools
+telnet
