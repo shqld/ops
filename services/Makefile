@@ -1,9 +1,9 @@
 CUR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 OPS := $(realpath $(CUR)/..)
 
-setup: .task/docker-login up
+setup: .task/docker-login .task/mkdir-volumes up
 
-up:
+up: .task/docker-login .task/mkdir-volumes
 	@docker-compose up -d
 	make .task/restart
 
@@ -34,3 +34,7 @@ restart: .task/restart
 	@test -v DOCKER_REGISTRY_TOKEN || (echo "DOCKER_REGISTRY_TOKEN not set" && exit 1)
 	@echo "${DOCKER_REGISTRY_TOKEN}" | docker login -u shqld --password-stdin ghcr.io
 	@mkdir -p .task; touch .task/docker-login
+
+.task/mkdir-volumes:
+	@mkdir -p /var/log/{nginx,varnish,dev,me}
+	@mkdir -p .task; touch .task/mkdir-volumes
