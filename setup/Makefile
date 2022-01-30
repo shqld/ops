@@ -23,6 +23,7 @@ setup: .task/pkgs .task/users .task/sshd .task/agent .task/firewall .task/ipv6 .
 
 .task/firewall: firewall.txt
 	@sed -i'.org' /etc/firewalld/firewalld.conf -e 's/AllowZoneDrifting=yes/AllowZoneDrifting=no/'
+	@systemctl enable firewalld
 	@systemctl start firewalld
 	# Reset current configurations each time (this is why making changes without '--permanent')
 	firewall-cmd --reload
