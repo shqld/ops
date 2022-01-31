@@ -15,18 +15,23 @@ setup: .task/pkgs .task/users .task/sshd .task/agent .task/firewall .task/ipv6 .
 	@systemctl restart sshd
 	@mkdir -p .task; touch .task/sshd
 
-.task/firewall: firewall.txt
+.task/firewall: firewall.txt # TODO: define all configutations in a file
 	@sed -i'.org' -e 's|AllowZoneDrifting=yes|AllowZoneDrifting=no|' /etc/firewalld/firewalld.conf 
 	@systemctl enable firewalld
 	@systemctl start firewalld
-	@# Reset current configurations each time (this is why making changes without '--permanent')
-	@firewall-cmd --reload
 	@# Drop all incoming traffic by default
-	@firewall-cmd --zone=drop --change-interface=ens3
-	@# Allow listed ports
-	@cat firewall.txt | xargs -n1 | xargs -I{} firewall-cmd --zone=drop --add-port={}
-	firewall-cmd --get-active-zones
+	@(firewall-cmd --get-default-zone | grep -q drop) || \
+		firewall-cmd --set-default-zone=drop
+	@firewall-cmd --zone=drop --query-interface=ens3 || \
+		firewall-cmd --permanent --zone=drop --change-interface=ens3
+	@echo $(filter-out $(file < firewall.txt), $(shell firewall-cmd --zone=drop --list-ports)) \
+		| xargs -n1 | xargs -I{} firewall-cmd --permanent --zone=drop --remove-port={}
+	@echo $(filter-out $(shell firewall-cmd --zone=drop --list-ports), $(file < firewall.txt)) \
+		| xargs -n1 | xargs -I{} firewall-cmd --permanent --zone=drop --add-port={}
+	@firewall-cmd --reload
 	@firewall-cmd --state | grep -q running || (echo "Firewall not running"; exit 1)
+	firewall-cmd --get-active-zones
+	@mkdir -p .task; touch .task/firewall
 
 .task/ipv6:
   # https://manual.sakura.ad.jp/vps/network/ipv6/centos-stream-8.html
