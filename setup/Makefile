@@ -1,10 +1,25 @@
 CUR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 OPS := $(realpath $(CUR)/..)
 
-setup: .task/pkgs .task/users .task/sshd .task/agent .task/firewall .task/ipv6 .task/cert
+setup: .task/packages .task/users .task/sshd .task/agent .task/firewall .task/ipv6 .task/cert
 
-.task/pkgs:
-	@make -f pkg.mk setup
+.task/packages: pkg-list.txt
+	@cat pkg-list.txt | grep 'add-repo ' | sed 's|add-repo ||' | \
+        xargs -n1 -I{} dnf config-manager --add-repo={}
+	@cat pkg-list.txt | grep 'rm ' | sed 's|rm ||' | \
+        xargs dnf remove -y
+	@cat pkg-list.txt | grep 'add ' | sed 's|add ||' | \
+        xargs dnf install -y
+	@mkdir -p .task; touch .task/packages
+
+.task/docker: .task/packages
+	@systemctl enable docker
+	@systemctl start docker
+	@which docker-compose || ( \
+		curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(shell uname -s)-$(shell uname -m)" -o /usr/bin/docker-compose && \
+		chmod +x /usr/bin/docker-compose \
+	)
+	@mkdir -p .task; touch .task/docker
 
 .task/users:
 	@make -f users.mk setup

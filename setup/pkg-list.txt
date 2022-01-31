@@ -1,6 +1,14 @@
-jq
-zsh
-lsof
-bind-utils
-net-tools
-telnet
+add yum-utils
+# https://github.com/containers/podman/issues/4791
+rm podman 
+add-repo https://download.docker.com/linux/centos/docker-ce.repo
+add docker-ce
+add docker-ce-cli
+add containerd.io
+
+add jq
+add zsh
+add lsof
+add bind-utils
+add net-tools
+add telnet
