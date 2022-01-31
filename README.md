@@ -29,3 +29,16 @@ ssh root@shqld.dev "
   && make -C /ops setup \
 "
 ```
+
+## Roadmaps
+
+-   [ ] remove (users) app / daemon
+-   [ ] check firewalld correctly works
+-   [ ] get docker registry token by API
+-   [ ] add .gitconfig for ssh connection
+-   [ ] move login-github to setup/Makefile
+-   [ ] update docker container image by agent
+-   [ ] issue certs by http-challenge01
+-   [ ] make parallel
+-   [ ] run 'make \*' command from agent, instead of directly calling commands
+-   [ ] unify all makefile and define function/macro for "mkdir -p .task; touch"
