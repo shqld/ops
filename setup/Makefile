@@ -27,7 +27,6 @@ setup: .task/pkgs .task/users .task/sshd .task/agent .task/firewall .task/ipv6 .
 	cat firewall.txt | xargs -n1 | xargs -I{} firewall-cmd --zone=drop --add-port={}
 	firewall-cmd --get-active-zones
 	@firewall-cmd --state | grep -q running || (echo "Firewall not running"; exit 1)
-	@mkdir -p .task; touch .task/firewall
 
 .task/ipv6:
   # https://manual.sakura.ad.jp/vps/network/ipv6/centos-stream-8.html
