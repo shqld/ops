@@ -48,6 +48,7 @@ setup: .task/pkgs .task/users .task/sshd .task/agent .task/firewall .task/ipv6 .
 	@sed -i'.org' -e "s@^#@@g" /etc/sysconfig/network-scripts/ifcfg-ens3
 	@cat /etc/sysconfig/network
 	@cat /etc/sysconfig/network-scripts/ifcfg-ens3
+	@systemctl restart docker
 	@mkdir -p .task; touch .task/ipv6
 
 .task/cert:
