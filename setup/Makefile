@@ -19,12 +19,12 @@ setup: .task/pkgs .task/users .task/sshd .task/agent .task/firewall .task/ipv6 .
 	@sed -i'.org' /etc/firewalld/firewalld.conf -e 's/AllowZoneDrifting=yes/AllowZoneDrifting=no/'
 	@systemctl enable firewalld
 	@systemctl start firewalld
-	# Reset current configurations each time (this is why making changes without '--permanent')
-	firewall-cmd --reload
-	# Drop all incoming traffic by default
-	firewall-cmd --zone=drop --change-interface=ens3
-	# Allow listed ports
-	cat firewall.txt | xargs -n1 | xargs -I{} firewall-cmd --zone=drop --add-port={}
+	@# Reset current configurations each time (this is why making changes without '--permanent')
+	@firewall-cmd --reload
+	@# Drop all incoming traffic by default
+	@firewall-cmd --zone=drop --change-interface=ens3
+	@# Allow listed ports
+	@cat firewall.txt | xargs -n1 | xargs -I{} firewall-cmd --zone=drop --add-port={}
 	firewall-cmd --get-active-zones
 	@firewall-cmd --state | grep -q running || (echo "Firewall not running"; exit 1)
 
