@@ -1,0 +1,13 @@
+[Unit]
+Description = Setup shqld/ops
+Requires = docker.service
+# TODO: Before = agent.service
+
+[Service]
+ExecStart = /ops/setup/run-setup.sh
+RemainAfterExit = true
+WorkingDirectory = /ops
+Type = oneshot
+
+[Install]
+WantedBy=multi-user.target

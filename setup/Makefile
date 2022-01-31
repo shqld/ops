@@ -1,7 +1,7 @@
 CUR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 OPS := $(realpath $(CUR)/..)
 
-setup: .task/pkgs .task/users .task/sshd .task/agent .task/firewall .task/ipv6 .task/cert
+setup: .task/pkgs .task/users .task/sshd .task/agent .task/firewall .task/schedule-setup .task/ipv6 .task/cert
 
 .task/pkgs:
 	@make -f pkg.mk setup
@@ -27,6 +27,12 @@ setup: .task/pkgs .task/users .task/sshd .task/agent .task/firewall .task/ipv6 .
 	@cat firewall.txt | xargs -n1 | xargs -I{} firewall-cmd --zone=drop --add-port={}
 	firewall-cmd --get-active-zones
 	@firewall-cmd --state | grep -q running || (echo "Firewall not running"; exit 1)
+
+.task/schedule-setup:
+	@ln -sfnv $(CUR)/setup.service /etc/systemd/system/setup.service
+	@systemctl enable setup
+	@systemctl start setup
+	@mkdir -p .task; touch .task/schedule-setup
 
 .task/ipv6:
   # https://manual.sakura.ad.jp/vps/network/ipv6/centos-stream-8.html
