@@ -64,11 +64,14 @@ func handleWebhookGithubPushEvent(w http.ResponseWriter, event *github.PushEvent
 	repo := event.GetRepo()
 
 	if repo.GetFullName() == "shqld/ops" && event.GetRef() == "refs/heads/main" {
+		wallMessage("shqld/agent: updating /ops ...")
+
 		log.Printf("running: 'git diff --exit-code --quiet'\n")
 		out, err := exec.Command("git", "diff", "--exit-code", "--quiet").Output()
 		log.Println(string(out))
 		if err != nil {
-			log.Printf("skipping the following commands because the workspace is dirty")
+			log.Printf("skipped skipped updating /ops because the workspace is dirty")
+			wallMessage("shqld/agent: skipped updating /ops because the workspace is dirty")
 			return err
 		}
 
@@ -88,6 +91,8 @@ func handleWebhookGithubPushEvent(w http.ResponseWriter, event *github.PushEvent
 			log.Printf("command failed: 'git reset --hard origin/main' err=%s\n", err)
 			return err
 		}
+
+		wallMessage("shqld/agent: updating /ops ...done")
 
 		log.Printf("running: 'git gc --aggressive --prune=all'\n")
 		out, err = exec.Command("git", "gc", "--aggressive", "--prune=all").Output()
@@ -139,6 +144,8 @@ func handleWebhookGithubWorkflowRunEvent(w http.ResponseWriter, event *github.Wo
 }
 
 func updateService(service_name string, image_url string) error {
+	wallMessage(fmt.Sprintf("shqld/agent: updating service %s to %s ...", service_name, image_url))
+
 	log.Printf("running 'docker pull %s'\n", image_url)
 
 	out, err := exec.Command("docker", "pull", image_url).Output()
@@ -157,6 +164,8 @@ func updateService(service_name string, image_url string) error {
 		return err
 	}
 
+	wallMessage(fmt.Sprintf("shqld/agent: updating service %s to %s ...done", service_name, image_url))
+
 	log.Printf("running 'docker system prune -f'\n")
 
 	out, err = exec.Command("docker", "system", "prune", "-f").Output()
@@ -167,4 +176,8 @@ func updateService(service_name string, image_url string) error {
 	}
 
 	return nil
+}
+
+func wallMessage(message string) {
+	exec.Command("wall", "-n", "'"+message+"'").Run()
 }
