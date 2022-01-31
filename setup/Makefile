@@ -16,7 +16,7 @@ setup: .task/pkgs .task/users .task/sshd .task/agent .task/firewall .task/schedu
 	@mkdir -p .task; touch .task/sshd
 
 .task/firewall: firewall.txt
-	@sed -i'.org' /etc/firewalld/firewalld.conf -e 's/AllowZoneDrifting=yes/AllowZoneDrifting=no/'
+	@sed -i'.org' -e 's|AllowZoneDrifting=yes|AllowZoneDrifting=no|' /etc/firewalld/firewalld.conf 
 	@systemctl enable firewalld
 	@systemctl start firewalld
 	@# Reset current configurations each time (this is why making changes without '--permanent')
@@ -34,19 +34,19 @@ setup: .task/pkgs .task/users .task/sshd .task/agent .task/firewall .task/schedu
 	@mkdir -p .task; touch .task/schedule-setup
 
 /etc/systemd/system/setup.service: $(CUR)/setup.service
-	@cat $(CUR)/setup.service | sed -e 's@$$(OPS)@$(OPS)@g' > /etc/systemd/system/setup.service
+	@cat $(CUR)/setup.service | sed -e 's|$$(OPS)|$(OPS)|g' > /etc/systemd/system/setup.service
 
 .task/ipv6:
   # https://manual.sakura.ad.jp/vps/network/ipv6/centos-stream-8.html
 	cat /etc/sysctl.conf
-	@sed -i'.org' -e "/net.ipv6.conf.all.disable_ipv6/s/1/0/" /etc/sysctl.conf
-	@sed -i'.org' -e "/net.ipv6.conf.default.disable_ipv6/s/1/0/" /etc/sysctl.conf
+	@sed -i'.org' -e "|net.ipv6.conf.all.disable_ipv6|s|1|0|" /etc/sysctl.conf
+	@sed -i'.org' -e "|net.ipv6.conf.default.disable_ipv6|s|1|0|" /etc/sysctl.conf
 	cat /etc/sysctl.conf
 	@ip addr show ens3
 	cat /etc/sysconfig/network
 	cat /etc/sysconfig/network-scripts/ifcfg-ens3
-	@sed -i'.org' -e "s@^#@@g" /etc/sysconfig/network
-	@sed -i'.org' -e "s@^#@@g" /etc/sysconfig/network-scripts/ifcfg-ens3
+	@sed -i'.org' -e "s|^#||g" /etc/sysconfig/network
+	@sed -i'.org' -e "s|^#||g" /etc/sysconfig/network-scripts/ifcfg-ens3
 	@cat /etc/sysconfig/network
 	@cat /etc/sysconfig/network-scripts/ifcfg-ens3
 	@systemctl restart docker

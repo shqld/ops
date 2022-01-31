@@ -22,4 +22,4 @@ setup: /etc/systemd/system/agent.service
 	@systemctl restart agent # TODO: separate 'start' and 'restart' into 'make setup' and 'make update'
 
 /etc/systemd/system/agent.service: $(CUR)/agent.service
-	@cat $(CUR)/agent.service | sed -e 's@$$(OPS)@$(OPS)@g' > /etc/systemd/system/agent.service
+	@cat $(CUR)/agent.service | sed -e 's|$$(OPS)|$(OPS)|g' > /etc/systemd/system/agent.service
