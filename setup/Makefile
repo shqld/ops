@@ -15,12 +15,6 @@ setup: .task/pkgs .task/users .task/sshd .task/agent .task/firewall .task/ipv6 .
 	@systemctl restart sshd
 	@mkdir -p .task; touch .task/sshd
 
-.task/agent: ## FIXME: (deps) make -C /ops/agent build
-	@ln -sfnv $(OPS)/agent/agent.service /etc/systemd/system/agent.service
-	@systemctl enable agent
-	@systemctl start agent
-	@mkdir -p .task; touch .task/agent
-
 .task/firewall: firewall.txt
 	@sed -i'.org' /etc/firewalld/firewalld.conf -e 's/AllowZoneDrifting=yes/AllowZoneDrifting=no/'
 	@systemctl enable firewalld

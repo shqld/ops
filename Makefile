@@ -3,8 +3,9 @@ OPS := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 .PHONY: setup
 setup: .task/login-github .task/auth-git
 	@make -C $(OPS)/setup
-	@make -C $(OPS)/services setup
+	@make -C $(OPS)/agent setup
 	@make -C $(OPS)/monitoring setup
+	@make -C $(OPS)/services setup
 
 update:
 	@git-pull
