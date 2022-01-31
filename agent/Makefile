@@ -1,4 +1,5 @@
 CUR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+OPS := $(realpath $(CUR)/..)
 
 DOCKER_RUN := docker run -v $(CUR):/app -w /app -e CGO_ENABLED=0 golang:1.17-alpine
 
@@ -16,7 +17,9 @@ build:
 	@$(DOCKER_RUN) go mod tidy
 	@mkdir -p .task; touch .task/tidy
 
-setup:
-	@ln -sfnv $(CUR)/agent.service /etc/systemd/system/agent.service
+setup: /etc/systemd/system/agent.service
 	@systemctl enable agent
 	@systemctl restart agent # TODO: separate 'start' and 'restart' into 'make setup' and 'make update'
+
+/etc/systemd/system/agent.service: $(CUR)/agent.service
+	@cat $(CUR)/agent.service | sed -e 's@$$(OPS)@$(OPS)@g' > /etc/systemd/system/agent.service

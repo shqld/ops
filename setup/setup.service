@@ -4,9 +4,9 @@ Requires = docker.service
 # TODO: Before = agent.service
 
 [Service]
-ExecStart = /ops/setup/run-setup.sh
+ExecStart = $(OPS)/setup/run-setup.sh
 RemainAfterExit = true
-WorkingDirectory = /ops
+WorkingDirectory = $(OPS)
 Type = oneshot
 
 [Install]

@@ -28,11 +28,13 @@ setup: .task/pkgs .task/users .task/sshd .task/agent .task/firewall .task/schedu
 	firewall-cmd --get-active-zones
 	@firewall-cmd --state | grep -q running || (echo "Firewall not running"; exit 1)
 
-.task/schedule-setup:
-	@ln -sfnv $(CUR)/setup.service /etc/systemd/system/setup.service
+.task/schedule-setup: /etc/systemd/system/setup.service
 	@systemctl enable setup
 	@systemctl start setup
 	@mkdir -p .task; touch .task/schedule-setup
+
+/etc/systemd/system/setup.service: $(CUR)/setup.service
+	@cat $(CUR)/setup.service | sed -e 's@$$(OPS)@$(OPS)@g' > /etc/systemd/system/setup.service
 
 .task/ipv6:
   # https://manual.sakura.ad.jp/vps/network/ipv6/centos-stream-8.html

@@ -5,7 +5,7 @@ Description = agent
 User = root
 Type = simple
 ExecStart = make run
-WorkingDirectory = /ops/agent
+WorkingDirectory = $(OPS)/agent
 Restart = always
 
 [Install]
