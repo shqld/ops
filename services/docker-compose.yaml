@@ -29,6 +29,7 @@ services:
               read_only: true
         depends_on:
             - varnish
+        restart: always
 
     varnish:
         image: ghcr.io/shqld/varnish:latest
@@ -44,13 +45,16 @@ services:
         depends_on:
             - dev
             - me
+        restart: always
 
     dev:
         image: ghcr.io/shqld/dev/web:latest
         environment:
             - PORT=3000
+        restart: always
 
     me:
         image: ghcr.io/shqld/me/web:latest
         environment:
             - PORT=3000
+        restart: always
