@@ -3,6 +3,10 @@ OPS := $(realpath $(CUR)/..)
 
 DOCKER_RUN := docker run -v $(CUR):/app -w /app -e CGO_ENABLED=0 golang:1.17-alpine
 
+define touch
+	@mkdir -p $(dir $@); touch $@
+endef
+
 run: .task/build
 	@$(CUR)/bin
 
@@ -11,11 +15,11 @@ build:
 
 .task/build: .task/tidy *.go
 	@$(DOCKER_RUN) go build -o bin .
-	@mkdir -p .task; touch .task/build
+	$(touch)
 
 .task/tidy: go.mod
 	@$(DOCKER_RUN) go mod tidy
-	@mkdir -p .task; touch .task/tidy
+	$(touch)
 
 setup: /etc/systemd/system/agent.service
 	@systemctl enable agent

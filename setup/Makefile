@@ -1,6 +1,10 @@
 CUR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 OPS := $(realpath $(CUR)/..)
 
+define touch
+	@mkdir -p $(dir $@); touch $@
+endef
+
 setup: .task/packages .task/users .task/sshd .task/agent .task/firewall .task/ipv6 .task/cert
 
 .task/packages: pkg-list.txt
@@ -10,7 +14,7 @@ setup: .task/packages .task/users .task/sshd .task/agent .task/firewall .task/ip
         xargs dnf remove -y
 	@cat pkg-list.txt | grep 'add ' | sed 's|add ||' | \
         xargs dnf install -y
-	@mkdir -p .task; touch .task/packages
+	$(touch)
 
 .task/docker: .task/packages
 	@systemctl enable docker
@@ -19,7 +23,7 @@ setup: .task/packages .task/users .task/sshd .task/agent .task/firewall .task/ip
 		curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(shell uname -s)-$(shell uname -m)" -o /usr/bin/docker-compose && \
 		chmod +x /usr/bin/docker-compose \
 	)
-	@mkdir -p .task; touch .task/docker
+	$(touch)
 
 .task/users:
 	@make -f users.mk setup
@@ -28,7 +32,7 @@ setup: .task/packages .task/users .task/sshd .task/agent .task/firewall .task/ip
 	@grep -q 'Match User \*' < /etc/ssh/sshd_config || \
 		cat < sshd_config >> /etc/ssh/sshd_config
 	@systemctl restart sshd
-	@mkdir -p .task; touch .task/sshd
+	$(touch)
 
 .task/firewall: firewall.txt # TODO: define all configutations in a file
 	@sed -i'.org' -e 's|AllowZoneDrifting=yes|AllowZoneDrifting=no|' /etc/firewalld/firewalld.conf 
@@ -46,7 +50,7 @@ setup: .task/packages .task/users .task/sshd .task/agent .task/firewall .task/ip
 	@firewall-cmd --reload
 	@firewall-cmd --state | grep -q running || (echo "Firewall not running"; exit 1)
 	firewall-cmd --get-active-zones
-	@mkdir -p .task; touch .task/firewall
+	$(touch)
 
 .task/ipv6:
   # https://manual.sakura.ad.jp/vps/network/ipv6/centos-stream-8.html
@@ -62,7 +66,7 @@ setup: .task/packages .task/users .task/sshd .task/agent .task/firewall .task/ip
 	@cat /etc/sysconfig/network
 	@cat /etc/sysconfig/network-scripts/ifcfg-ens3
 	@systemctl restart docker
-	@mkdir -p .task; touch .task/ipv6
+	$(touch)
 
 .task/cert:
     # https://stackoverflow.com/a/57565119
@@ -80,4 +84,4 @@ setup: .task/packages .task/users .task/sshd .task/agent .task/firewall .task/ip
 							--agree-tos \
 							--manual-public-ip-logging-ok \
 							--preferred-challenges dns
-	@mkdir -p .task; touch .task/cert
+	$(touch)

@@ -1,6 +1,10 @@
 CUR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 OPS := $(realpath $(CUR)/..)
 
+define touch
+	@mkdir -p $(dir $@); touch $@
+endef
+
 setup: .task/docker-login .task/mkdir-volumes up
 
 up: .task/docker-login .task/mkdir-volumes
@@ -16,25 +20,25 @@ restart: .task/restart
 
 .task/restart/nginx: nginx/nginx.conf
 	@docker-compose restart nginx
-	@mkdir -p .task/restart; touch .task/restart/nginx
+	$(touch)
 
 .task/restart/varnish: varnish/default.vcl varnish/chunks/*.vcl
 	@docker-compose restart varnish
-	@mkdir -p .task/restart; touch .task/restart/varnish
+	$(touch)
 
 .task/restart/dev:
 	@docker-compose restart dev
-	@mkdir -p .task/restart; touch .task/restart/dev
+	$(touch)
 
 .task/restart/me:
 	@docker-compose restart me
-	@mkdir -p .task/restart; touch .task/restart/me
+	$(touch)
 
 .task/docker-login:
 	@test -v DOCKER_REGISTRY_TOKEN || (echo "DOCKER_REGISTRY_TOKEN not set" && exit 1)
 	@echo "${DOCKER_REGISTRY_TOKEN}" | docker login -u shqld --password-stdin ghcr.io
-	@mkdir -p .task; touch .task/docker-login
+	$(touch)
 
 .task/mkdir-volumes:
 	@mkdir -p /var/log/{nginx,varnish,dev,me}
-	@mkdir -p .task; touch .task/mkdir-volumes
+	$(touch)

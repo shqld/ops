@@ -1,5 +1,9 @@
 OPS := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 
+define touch
+	@mkdir -p $(dir $@); touch $@
+endef
+
 .PHONY: setup
 setup: .task/login-github .task/auth-git
 	@make -C $(OPS)/setup
@@ -22,7 +26,7 @@ git-pull:
 	@sudo dnf config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
 	@sudo dnf install -y gh
 	@gh auth login --web --scopes admin:public_key
-	@mkdir -p .task; touch .task/login-github
+	$(touch)
 
 .task/keygen: .ssh_config
     # Partially ported from https://github.com/shqld/dotfiles/blob/5ffe897064b81b3cfa25701fc8947a099cd1cd26/Makefile#L59-L64
@@ -33,8 +37,8 @@ git-pull:
             mkdir -p $(dir $(val)); ssh-keygen -b 4096 -t ed25519 -N '' -C 'shqld@$(shell hostname)' -f $(val) \
         ); \
     )
-	@mkdir -p .task; touch .task/keygen
+	$(touch)
 
 .task/auth-git: .task/keygen .task/login-github
 	@gh api -X POST /user/keys -F title=shqld@$(shell hostname) -F key="$(file < $(HOME)/.ssh/git@github.com/id.pub)"
-	@mkdir -p .task; touch .task/auth-git
+	$(touch)
