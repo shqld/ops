@@ -6,11 +6,9 @@ services:
             - target: 443
               published: 443
               protocol: tcp
-              mode: host
             - target: 443
               published: 443
               protocol: udp
-              mode: host
         volumes:
             - type: bind
               source: ./nginx/nginx.conf
