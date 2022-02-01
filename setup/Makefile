@@ -37,12 +37,12 @@ setup: .task/packages .task/users .task/sshd .task/agent .task/firewall .task/ip
 	@# Drop all incoming traffic by default
 	@(firewall-cmd --get-default-zone | grep -q drop) || \
 		firewall-cmd --set-default-zone=drop
-	@firewall-cmd --zone=drop --query-interface=ens3 || \
-		firewall-cmd --permanent --zone=drop --change-interface=ens3
-	@echo $(filter-out $(file < firewall.txt), $(shell firewall-cmd --zone=drop --list-ports)) \
-		| xargs -n1 | xargs -I{} firewall-cmd --permanent --zone=drop --remove-port={}
-	@echo $(filter-out $(shell firewall-cmd --zone=drop --list-ports), $(file < firewall.txt)) \
-		| xargs -n1 | xargs -I{} firewall-cmd --permanent --zone=drop --add-port={}
+	@firewall-cmd --query-interface=ens3 || \
+		firewall-cmd --permanent --change-interface=ens3
+	@echo $(filter-out $(file < firewall.txt), $(shell firewall-cmd --list-ports)) \
+		| xargs -n1 | xargs -I{} firewall-cmd --permanent --remove-port={}
+	@echo $(filter-out $(shell firewall-cmd --list-ports), $(file < firewall.txt)) \
+		| xargs -n1 | xargs -I{} firewall-cmd --permanent --add-port={}
 	@firewall-cmd --reload
 	@firewall-cmd --state | grep -q running || (echo "Firewall not running"; exit 1)
 	firewall-cmd --get-active-zones
