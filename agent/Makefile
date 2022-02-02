@@ -2,11 +2,15 @@ include ../lib.mk
 
 DOCKER_RUN := docker run -v $(CUR):/app -w /app -e CGO_ENABLED=0 golang:1.17-alpine
 
-run: .task/build
-	@$(CUR)/bin
+up: .task/build agent.service
+	@cat $(CUR)/agent.service | sed -e 's|$$(OPS)|$(OPS)|g' \
+		> /etc/systemd/system/agent.service
+	@systemctl enable agent
+	@systemctl restart agent
 
-build:
-	@make .task/build
+down:
+	@systemctl stop agent
+	@systemctl disable agent
 
 .task/build: .task/tidy *.go
 	@$(DOCKER_RUN) go build -o bin .
@@ -15,10 +19,3 @@ build:
 .task/tidy: go.mod
 	@$(DOCKER_RUN) go mod tidy
 	$(touch)
-
-setup: /etc/systemd/system/agent.service
-	@systemctl enable agent
-	@systemctl restart agent # TODO: separate 'start' and 'restart' into 'make setup' and 'make update'
-
-/etc/systemd/system/agent.service: $(CUR)/agent.service
-	@cat $(CUR)/agent.service | sed -e 's|$$(OPS)|$(OPS)|g' > /etc/systemd/system/agent.service

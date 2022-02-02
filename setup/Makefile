@@ -1,6 +1,9 @@
 include ../lib.mk
 
-setup: .task/newrelic .task/packages .task/users .task/sshd .task/agent .task/firewall .task/ipv6 .task/cert
+setup: .task/agent .task/newrelic .task/packages .task/users .task/sshd .task/agent .task/firewall .task/ipv6 .task/cert
+
+.task/agent:
+	@make -C $(OPS)/agent up
 
 .task/newrelic:
 	@test -v NEW_RELIC_API_KEY || (echo "NEW_RELIC_API_KEY not set" && exit 1)

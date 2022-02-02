@@ -4,8 +4,7 @@ Description = agent
 [Service]
 User = root
 Type = simple
-ExecStart = make run
-WorkingDirectory = $(OPS)/agent
+ExecStart = $(OPS)/agent/bin
 Restart = always
 
 [Install]

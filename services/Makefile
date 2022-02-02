@@ -1,10 +1,8 @@
 include ../lib.mk
 
-setup: .task/docker-login .task/mkdir-volumes up
-
 up: .task/docker-login .task/mkdir-volumes
 	@docker-compose up -d
-	make .task/restart
+	@$(MAKE) .task/restart
 
 down:
 	@docker-compose down

@@ -1,9 +1,7 @@
 include lib.mk
 
 setup: .task/login-github .task/auth-git
-	@make -C $(OPS)/setup
-	@make -C $(OPS)/agent setup
-	@make -C $(OPS)/services setup
+	@make -C $(OPS)/setup setup
 
 update:
 	@git-pull
