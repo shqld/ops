@@ -41,5 +41,6 @@ ssh root@shqld.dev "
 -   [ ] issue certs by http-challenge01
 -   [ ] make parallel
 -   [ ] run 'make \*' command from agent, instead of directly calling commands
--   [ ] unify all makefile and define function/macro for "mkdir -p .task; touch"
+-   [ ] unify all makefiles
+-   [x] define function/macro for "mkdir -p .task; touch"
 -   [x] enable firewalld lockdown

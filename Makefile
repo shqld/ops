@@ -1,10 +1,5 @@
-OPS := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+include lib.mk
 
-define touch
-	@mkdir -p $(dir $@); touch $@
-endef
-
-.PHONY: setup
 setup: .task/login-github .task/auth-git
 	@make -C $(OPS)/setup
 	@make -C $(OPS)/agent setup

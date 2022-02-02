@@ -1,9 +1,4 @@
-CUR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
-OPS := $(realpath $(CUR)/..)
-
-define touch
-	@mkdir -p $(dir $@); touch $@
-endef
+include ../lib.mk
 
 setup: .task/packages .task/users .task/sshd .task/agent .task/firewall .task/ipv6 .task/cert
 

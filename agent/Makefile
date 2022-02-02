@@ -1,11 +1,6 @@
-CUR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
-OPS := $(realpath $(CUR)/..)
+include ../lib.mk
 
 DOCKER_RUN := docker run -v $(CUR):/app -w /app -e CGO_ENABLED=0 golang:1.17-alpine
-
-define touch
-	@mkdir -p $(dir $@); touch $@
-endef
 
 run: .task/build
 	@$(CUR)/bin
