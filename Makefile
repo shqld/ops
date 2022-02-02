@@ -3,7 +3,6 @@ include lib.mk
 setup: .task/login-github .task/auth-git
 	@make -C $(OPS)/setup
 	@make -C $(OPS)/agent setup
-	@make -C $(OPS)/monitoring setup
 	@make -C $(OPS)/services setup
 
 update:

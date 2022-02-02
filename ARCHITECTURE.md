@@ -16,8 +16,6 @@ TBD
   |- Makefile
 /app
   |- Makefile
-/monitoring
-  |- Makefile
 ```
 
 https://github.com/shqld/ops/tree/main/

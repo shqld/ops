@@ -1,6 +1,15 @@
 include ../lib.mk
 
-setup: .task/packages .task/users .task/sshd .task/agent .task/firewall .task/ipv6 .task/cert
+setup: .task/newrelic .task/packages .task/users .task/sshd .task/agent .task/firewall .task/ipv6 .task/cert
+
+.task/newrelic:
+	@test -v NEW_RELIC_API_KEY || (echo "NEW_RELIC_API_KEY not set" && exit 1)
+	@test -v NEW_RELIC_ACCOUNT_ID || (echo "NEW_RELIC_ACCOUNT_ID not set" && exit 1)
+	@curl -Ls https://download.newrelic.com/install/newrelic-cli/scripts/install.sh | bash
+	@/usr/local/bin/newrelic install -y
+	@mkdir -p /etc/newrelic-infra/logging.d
+	@ln -sfnv $(CUR)/newrelic/logging.yml /etc/newrelic-infra/logging.d/logging.yml
+	$(touch)
 
 .task/packages: pkg-list.txt
 	@cat pkg-list.txt | grep 'add-repo ' | sed 's|add-repo ||' | \
