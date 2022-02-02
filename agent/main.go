@@ -66,57 +66,16 @@ func handleWebhookGithubPushEvent(w http.ResponseWriter, event *github.PushEvent
 	if repo.GetFullName() == "shqld/ops" && event.GetRef() == "refs/heads/main" {
 		wallMessage("shqld/agent: updating /ops ...")
 
-		log.Printf("running: 'git diff --exit-code --quiet'\n")
-		out, err := exec.Command("git", "diff", "--exit-code", "--quiet").Output()
-		log.Println(string(out))
-		if err != nil {
-			log.Printf("skipped skipped updating /ops because the workspace is dirty")
-			wallMessage("shqld/agent: skipped updating /ops because the workspace is dirty")
-			return err
-		}
-
-		// FIXME: specify head sha
-		log.Printf("running: 'git fetch origin main'\n")
-		out, err = exec.Command("git", "fetch", "origin", "main").Output()
-		log.Println(string(out))
-		if err != nil {
-			log.Printf("command failed: 'git fetch origin main' err=%s\n", err)
-			return err
-		}
-
-		log.Printf("running: 'git reset --hard origin/main'\n")
-		out, err = exec.Command("git", "reset", "--hard", "origin/main").Output()
-		log.Println(string(out))
-		if err != nil {
-			log.Printf("command failed: 'git reset --hard origin/main' err=%s\n", err)
-			return err
-		}
-
-		wallMessage("shqld/agent: updating /ops ...done")
-
-		log.Printf("running: 'git gc --aggressive --prune=all'\n")
-		out, err = exec.Command("git", "gc", "--aggressive", "--prune=all").Output()
-		log.Println(string(out))
-		if err != nil {
-			log.Printf("command failed: 'git gc --aggressive --prune=all' err=%s\n", err)
-			return err
-		}
-
-		log.Printf("running: 'du -sh /ops/.git'\n")
-		out, err = exec.Command("du", "-sh", "/ops/.git").Output()
-		log.Println(string(out))
-		if err != nil {
-			log.Printf("command failed: 'du -sh /ops/.git' err=%s\n", err)
-			return err
-		}
-
 		log.Printf("running: 'make -C /ops setup'\n")
-		out, err = exec.Command("make", "-C", "/ops", "setup").Output()
+
+		out, err := exec.Command("make", "-C", "/ops", "setup").Output()
 		log.Println(string(out))
 		if err != nil {
 			log.Printf("command failed: 'make -C /ops setup' err=%s\n", err)
 			return err
 		}
+
+		wallMessage("shqld/agent: updating /ops ...done")
 	}
 
 	return nil

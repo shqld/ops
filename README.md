@@ -41,8 +41,9 @@ ssh root@shqld.dev "
 -   [ ] update docker container image by agent
 -   [ ] issue certs by http-challenge01
 -   [ ] make parallel
--   [ ] run 'make \*' command from agent, instead of directly calling commands
+-   [x] run 'make \*' command from agent, instead of directly calling commands
 -   [ ] unify all makefiles
 -   [x] define function/macro for "mkdir -p .task; touch"
 -   [x] enable firewalld lockdown
 -   [ ] Include some .conf files from /etc/ssh/sshd_config
+-   [ ] git stash when remote's workspace is dirty
