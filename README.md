@@ -32,11 +32,12 @@ ssh root@shqld.dev "
 
 ## Roadmaps
 
--   [ ] remove (users) app / daemon
+-   [x] remove (users) app / daemon
+-   [ ] add user: app for running applications in docker
 -   [ ] check firewalld correctly works
 -   [ ] get docker registry token by API
 -   [ ] add .gitconfig for ssh connection
--   [ ] move login-github to setup/Makefile
+-   [x] move login-github to setup/Makefile
 -   [ ] update docker container image by agent
 -   [ ] issue certs by http-challenge01
 -   [ ] make parallel
@@ -44,3 +45,4 @@ ssh root@shqld.dev "
 -   [ ] unify all makefiles
 -   [x] define function/macro for "mkdir -p .task; touch"
 -   [x] enable firewalld lockdown
+-   [ ] Include some .conf files from /etc/ssh/sshd_config

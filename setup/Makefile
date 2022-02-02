@@ -1,9 +1,30 @@
 include ../lib.mk
 
-setup: .task/agent .task/newrelic .task/packages .task/users .task/sshd .task/agent .task/firewall .task/ipv6 .task/cert
+setup: .task/agent .task/login-github .task/keygen .task/auth-git .task/newrelic .task/packages .task/docker .task/users .task/sshd .task/firewall .task/ipv6 .task/cert
 
 .task/agent:
-	@make -C $(OPS)/agent up
+	@$(MAKE) -C $(OPS)/agent up
+
+.task/login-github:
+	@sudo dnf config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
+	@sudo dnf install -y gh
+	@-gh auth login --web --scopes admin:public_key
+	$(touch)
+
+.task/keygen: .ssh_config
+    # Partially ported from https://github.com/shqld/dotfiles/blob/5ffe897064b81b3cfa25701fc8947a099cd1cd26/Makefile#L59-L64
+	@mkdir -p $(HOME)/.ssh && chmod 700 $(HOME)/.ssh
+	@cat .ssh_config > $(HOME)/.ssh/config
+	@$(foreach val, $(shell grep IdentityFile .ssh_config | sed 's|IdentityFile ||g'), \
+        test -f $(val) || ( \
+            mkdir -p $(dir $(val)); ssh-keygen -b 4096 -t ed25519 -N '' -C 'shqld@$(shell hostname)' -f $(val) \
+        ); \
+    )
+	$(touch)
+
+.task/auth-git: .task/keygen .task/login-github
+	@gh api -X POST /user/keys -F title=shqld@$(shell hostname) -F key="$(file < $(HOME)/.ssh/git@github.com/id.pub)"
+	$(touch)
 
 .task/newrelic:
 	@test -v NEW_RELIC_API_KEY || (echo "NEW_RELIC_API_KEY not set" && exit 1)
@@ -32,8 +53,16 @@ setup: .task/agent .task/newrelic .task/packages .task/users .task/sshd .task/ag
 	)
 	$(touch)
 
-.task/users:
-	@make -f users.mk setup
+.task/users: .task/docker
+	@id -u sho > $(NULL) || useradd sho
+	@grep -q 'docker:.*:sho' -q < /etc/group || usermod -a -G docker sho
+	@ls -la / | grep ops | grep -q sho || chown sho -R $(OPS)
+	@test -d /home/sho/.ssh || \
+        (mkdir -p /home/sho/.ssh && chmod 700 /home/sho/.ssh && chown sho -R /home/sho/.ssh)
+	@curl https://github.com/shqld.keys 2> $(NULL) > /home/sho/.ssh/authorized_keys
+	@chmod 600 /home/sho/.ssh/authorized_keys
+	@sh sho.sudoers > /etc/sudoers.d/sho
+	$(touch)
 
 .task/sshd:
 	@grep -q 'Match User \*' < /etc/ssh/sshd_config || \
