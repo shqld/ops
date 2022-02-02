@@ -38,6 +38,8 @@ setup: .task/packages .task/users .task/sshd .task/agent .task/firewall .task/ip
 	@sed -i'.org' -e 's|AllowZoneDrifting=yes|AllowZoneDrifting=no|' /etc/firewalld/firewalld.conf 
 	@systemctl enable firewalld
 	@systemctl start firewalld
+	@firewall-cmd --query-lockdown || \
+		firewall-cmd --lockdown-on
 	@(firewall-cmd --get-zones | grep -vq shqld) || \
 		firewall-cmd --permanent --delete-zone=shqld
 	@firewall-cmd --permanent --name=shqld --new-zone-from-file=$(CUR)/firewall.xml
