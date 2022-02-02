@@ -42,3 +42,4 @@ ssh root@shqld.dev "
 -   [ ] make parallel
 -   [ ] run 'make \*' command from agent, instead of directly calling commands
 -   [ ] unify all makefile and define function/macro for "mkdir -p .task; touch"
+-   [ ] enable firewalld lockdown

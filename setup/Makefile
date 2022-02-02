@@ -43,6 +43,9 @@ setup: .task/packages .task/users .task/sshd .task/agent .task/firewall .task/ip
 		firewall-cmd --set-default-zone=drop
 	@firewall-cmd --query-interface=ens3 || \
 		firewall-cmd --permanent --change-interface=ens3
+	@# Allow all types of icmp
+	@firewall-cmd --permanent --add-icmp-block-inversion && \
+		firewall-cmd --permanent --add-icmp-block={$(shell firewall-cmd --get-icmptypes | tr ' ' ',')} 
 	@echo $(filter-out $(file < firewall.txt), $(shell firewall-cmd --list-ports)) \
 		| xargs -n1 | xargs -I{} firewall-cmd --permanent --remove-port={}
 	@echo $(filter-out $(shell firewall-cmd --list-ports), $(file < firewall.txt)) \
