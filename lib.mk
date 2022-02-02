@@ -5,7 +5,7 @@ NULL := /dev/null
 MAKEFLAGS += --no-builtin-rules --no-buildint-variables --no-print-directory
 
 define touch
-	@mkdir -p $(dir $@); touch $@
+	@mkdir -p $(@D); touch $(@)
 endef
 
 .DEFAULT_GOAL := help
