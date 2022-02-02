@@ -34,25 +34,19 @@ setup: .task/packages .task/users .task/sshd .task/agent .task/firewall .task/ip
 	@systemctl restart sshd
 	$(touch)
 
-.task/firewall: firewall.txt # TODO: define all configutations in a file
+.task/firewall: firewall.xml
 	@sed -i'.org' -e 's|AllowZoneDrifting=yes|AllowZoneDrifting=no|' /etc/firewalld/firewalld.conf 
 	@systemctl enable firewalld
 	@systemctl start firewalld
-	@# Drop all incoming traffic by default
-	@(firewall-cmd --get-default-zone | grep -q drop) || \
-		firewall-cmd --set-default-zone=drop
+	@(firewall-cmd --get-zones | grep -vq shqld) || \
+		firewall-cmd --permanent --delete-zone=shqld
+	@firewall-cmd --permanent --name=shqld --new-zone-from-file=$(CUR)/firewall.xml
+	@(firewall-cmd --get-default-zone | grep -q shqld) || \
+		firewall-cmd --set-default-zone=shqld
 	@firewall-cmd --query-interface=ens3 || \
 		firewall-cmd --permanent --change-interface=ens3
-	@# Allow some types of icmp to make ipv6 connection available
-	@firewall-cmd --permanent --add-icmp-block-inversion && \
-		firewall-cmd --permanent --add-icmp-block={packet-too-big,neighbour-advertisement,neighbour-solicitation,router-advertisement}
-	@echo $(filter-out $(file < firewall.txt), $(shell firewall-cmd --list-ports)) \
-		| xargs -n1 | xargs -I{} firewall-cmd --permanent --remove-port={}
-	@echo $(filter-out $(shell firewall-cmd --list-ports), $(file < firewall.txt)) \
-		| xargs -n1 | xargs -I{} firewall-cmd --permanent --add-port={}
 	@firewall-cmd --reload
 	@firewall-cmd --state | grep -q running || (echo "Firewall not running"; exit 1)
-	firewall-cmd --get-active-zones
 	$(touch)
 
 .task/ipv6:
