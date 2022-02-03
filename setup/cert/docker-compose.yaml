@@ -1,0 +1,52 @@
+version: '3.8'
+services:
+    certbot:
+        image: certbot/certbot
+        volumes:
+            - type: volume
+              source: webroot
+              target: /var/www
+            - type: bind
+              source: /etc/letsencrypt
+              target: /etc/letsencrypt
+        entrypoint:
+            - certbot
+            - certonly
+            - --domain
+            - shqld.dev
+            - --domain
+            - me.shqld.dev
+            - --domain
+            - agent.shqld.dev
+            - --email
+            - me@shqld.dev
+            - --preferred-challenges
+            - http
+            - --webroot
+            - -w
+            - /var/www
+            - -n
+            - --verbose
+            - --agree-tos
+            - --manual-public-ip-logging-ok
+
+    nginx:
+        image: ranadeeppolavarapu/nginx-http3
+        ports:
+            - target: 80
+              published: 80
+              protocol: tcp
+        volumes:
+            - type: bind
+              source: ./nginx.conf
+              target: /etc/nginx/nginx.conf
+              read_only: true
+            - type: volume
+              source: webroot
+              target: /var/www
+              read_only: true
+        depends_on:
+            - certbot
+
+volumes:
+    webroot:

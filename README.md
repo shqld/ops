@@ -39,7 +39,7 @@ ssh root@shqld.dev "
 -   [ ] add .gitconfig for ssh connection
 -   [x] move login-github to setup/Makefile
 -   [ ] update docker container image by agent
--   [ ] issue certs by http-challenge01
+-   [x] issue certs by http-challenge01
 -   [ ] make parallel
 -   [x] run 'make \*' command from agent, instead of directly calling commands
 -   [ ] unify all makefiles

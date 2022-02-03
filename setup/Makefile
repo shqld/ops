@@ -103,20 +103,8 @@ setup: .task/agent .task/login-github .task/keygen .task/auth-git .task/newrelic
 	@systemctl restart docker
 	$(touch)
 
-.task/cert:
-    # https://stackoverflow.com/a/57565119
-	@docker run -i --rm \
-			--name certbot \
-			-v '/var/log/letsencrypt:/var/log/letsencrypt' \
-			-v '/etc/letsencrypt:/etc/letsencrypt' \
-			certbot/certbot \
-					certonly \
-							--verbose \
-							--manual \
-							--domain shqld.dev \
-							--domain *.shqld.dev \
-							--email me@shqld.dev \
-							--agree-tos \
-							--manual-public-ip-logging-ok \
-							--preferred-challenges dns
+.task/cert: .task/docker
+	@firewall-cmd --add-port=80/tcp
+	@docker-compose -f $(CUR)/cert/docker-compose.yaml up --abort-on-container-exit --exit-code-from certbot
+	@firewall-cmd --remove-port=80/tcp
 	$(touch)
