@@ -1,6 +1,6 @@
 include lib.mk
 
-setup: force .task/login-github .task/auth-git
+setup: force
 	@$(MAKE) -C $(OPS)/setup setup
 
 update:
