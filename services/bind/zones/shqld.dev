@@ -16,6 +16,7 @@ $TTL 1M
         1H      AAAA    2001:e42:102:1819:160:16:235:221
         6H	CAA	0 issue "letsencrypt.org"
         1M      TXT     "hello from @shqld"
+        1H      HTTPS   1 . alpn=h3,h2 ipv4hint=160.16.235.221 ipv6hint=2001:e42:102:1819:160:16:235:221
 dns     1H      CNAME   shqld.dev.
 agent   1H      CNAME   shqld.dev.
 me      1H      CNAME   shqld.dev.
