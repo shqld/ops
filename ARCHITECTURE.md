@@ -26,7 +26,7 @@ TBD
 
 ## Application
 
-Every application is a docker container and run by `docker-compose`.
+Every application is a docker container and run by `docker compose`.
 
 Applications are placed under `/system` and `/app`.
 

@@ -1,5 +1,8 @@
 include ../lib.mk
 
+# https://github.com/docker/compose/releases
+DOCKER_COMPOSE_VERSION := 2.2.3
+
 setup: .task/agent .task/login-github .task/keygen .task/auth-git .task/newrelic .task/packages .task/docker .task/users .task/sshd .task/firewall .task/ipv6 .task/cert
 
 .task/agent:
@@ -47,11 +50,12 @@ setup: .task/agent .task/login-github .task/keygen .task/auth-git .task/newrelic
 .task/docker: .task/packages
 	@systemctl enable docker
 	@systemctl start docker
-	@which docker-compose || ( \
-		curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(shell uname -s)-$(shell uname -m)" -o /usr/bin/docker-compose && \
-		chmod +x /usr/bin/docker-compose \
+	@docker compose version > $(NULL) || ( \
+		mkdir -p ~/.docker/cli-plugins/ && \
+		curl -SL "https://github.com/docker/compose/releases/download/v$(DOCKER_COMPOSE_VERSION)/docker compose-$(shell uname -s)-$(shell uname -m)" -o ~/.docker/cli-plugins/docker compose && \
+		chmod +x ~/.docker/cli-plugins/docker compose && \
+		docker compose version \
 	)
-	$(touch)
 
 .task/users: .task/docker
 	@id -u sho > $(NULL) || useradd sho
@@ -105,6 +109,6 @@ setup: .task/agent .task/login-github .task/keygen .task/auth-git .task/newrelic
 
 .task/cert: .task/docker
 	@firewall-cmd --add-port=80/tcp
-	@docker-compose -f $(CUR)/cert/docker-compose.yaml up --abort-on-container-exit --exit-code-from certbot
+	@docker compose -f $(CUR)/cert/docker-compose.yaml up --abort-on-container-exit --exit-code-from certbot
 	@firewall-cmd --remove-port=80/tcp
 	$(touch)

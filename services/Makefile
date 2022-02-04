@@ -1,30 +1,30 @@
 include ../lib.mk
 
 up: .task/docker-login .task/mkdir-volumes
-	@docker-compose up -d
+	@docker compose up -d
 	@$(MAKE) .task/restart
 
 down:
-	@docker-compose down
+	@docker compose down
 
 restart: .task/restart
 
 .task/restart: .task/restart/nginx .task/restart/varnish .task/restart/dev .task/restart/me
 
 .task/restart/nginx: nginx/nginx.conf
-	@docker-compose restart nginx
+	@docker compose restart nginx
 	$(touch)
 
 .task/restart/varnish: varnish/default.vcl varnish/chunks/*.vcl
-	@docker-compose restart varnish
+	@docker compose restart varnish
 	$(touch)
 
 .task/restart/dev:
-	@docker-compose restart dev
+	@docker compose restart dev
 	$(touch)
 
 .task/restart/me:
-	@docker-compose restart me
+	@docker compose restart me
 	$(touch)
 
 .task/docker-login:
