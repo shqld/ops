@@ -109,6 +109,6 @@ setup: .task/agent .task/login-github .task/keygen .task/auth-git .task/newrelic
 
 .task/cert: .task/docker
 	@firewall-cmd --add-port=80/tcp
-	@docker compose -f $(CUR)/cert/docker-compose.yaml up --abort-on-container-exit --exit-code-from certbot
+	@docker compose -f $(CUR)/cert/compose.yaml up --abort-on-container-exit --exit-code-from certbot
 	@firewall-cmd --remove-port=80/tcp
 	$(touch)
