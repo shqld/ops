@@ -32,9 +32,7 @@ ssh root@shqld.dev "
 
 ## Roadmaps
 
--   [ ] IP Ailiasing
 -   [ ] DoH / DoT
--   [ ] HTTPS record
 -   [ ] ECH
 -   [ ] log aggregation
 -   [ ] log compression with zstd
@@ -46,6 +44,7 @@ ssh root@shqld.dev "
 -   [ ] unify all makefiles
 -   [ ] Include some .conf files from /etc/ssh/sshd_config
 -   [ ] git stash when remote's workspace is dirty
+-   [x] HTTPS record
 -   [x] check firewalld correctly works
 -   [x] remove (users) app / daemon
 -   [x] move login-github to setup/Makefile
