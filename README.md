@@ -32,7 +32,12 @@ ssh root@shqld.dev "
 
 ## Roadmaps
 
-
+-   [ ] IP Ailiasing
+-   [ ] DoH / DoT
+-   [ ] HTTPS record
+-   [ ] ECH
+-   [ ] log aggregation
+-   [ ] log compression with zstd
 -   [ ] add user: app for running applications in docker
 -   [ ] get docker registry token by API
 -   [ ] add .gitconfig for ssh connection
