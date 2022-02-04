@@ -9,7 +9,7 @@ down:
 
 restart: .task/restart
 
-.task/restart: .task/restart/nginx .task/restart/varnish .task/restart/dev .task/restart/me
+.task/restart: .task/restart/nginx .task/restart/varnish .task/restart/bind .task/restart/dev .task/restart/me
 
 .task/restart/nginx: nginx/nginx.conf
 	@docker compose restart nginx
@@ -17,6 +17,10 @@ restart: .task/restart
 
 .task/restart/varnish: varnish/default.vcl varnish/chunks/*.vcl
 	@docker compose restart varnish
+	$(touch)
+
+.task/restart/bind: bind/*.conf bind/zones/*
+	@docker compose restart bind
 	$(touch)
 
 .task/restart/dev:

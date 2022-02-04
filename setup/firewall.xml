@@ -5,6 +5,10 @@
     <description>Unsolicited incoming network packets are dropped. Incoming packets that are related to outgoing network connections are accepted. Outgoing network connections are allowed.</description>
 
     <port port="22" protocol="tcp"/>
+    <port port="53" protocol="tcp"/>
+    <port port="53" protocol="udp"/>
+    <!-- TODO: make sure what this port is for -->
+    <port port="953" protocol="tcp"/>
     <port port="443" protocol="tcp"/>
     <port port="443" protocol="udp"/>
 

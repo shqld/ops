@@ -45,6 +45,31 @@ services:
             - me
         restart: always
 
+    bind:
+        image: internetsystemsconsortium/bind9:9.18
+        ports:
+            - target: 53
+              published: 53
+              protocol: tcp
+            - target: 53
+              published: 53
+              protocol: udp
+            - target: 953
+              published: 953
+              protocol: tcp
+              host_ip: 127.0.0.1
+        volumes:
+            - type: bind
+              source: ./bind
+              target: /etc/bind
+              read_only: true
+            - type: tmpfs
+              target: /var/cache/bind
+            - type: tmpfs
+              target: /var/lib/bind
+            - /var/log/bind:/var/log/bind
+        restart: always
+
     dev:
         image: ghcr.io/shqld/dev/web:latest
         environment:

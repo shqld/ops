@@ -1,0 +1,22 @@
+; NOTE: 1M == 1 minute (!= month)
+
+$ORIGIN shqld.dev.
+$TTL 1M
+
+@       IN      SOA             shqld.dev.         postmaster.shqld.dev.      (
+        2022020401      ; serial number
+        0              ; time to refresh
+        0              ; time to retry
+        0              ; time to expire
+        0              ; minimum TTL
+);
+
+        0       NS      tk2-259-39467.vs.sakura.ne.jp.
+        0       A       160.16.235.221
+        0       AAAA    2001:e42:102:1819:160:16:235:221
+        0	CAA	0 issue "letsencrypt.org"
+        0       TXT     "hello from @shqld, test, test and test"
+dns     0       CNAME   shqld.dev.
+agent   0       CNAME   shqld.dev.
+me      0       CNAME   shqld.dev.
+labs    0       CNAME   shqld.dev.
