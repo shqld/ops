@@ -2,6 +2,7 @@ include lib.mk
 
 setup: force
 	@$(MAKE) -C $(OPS)/setup setup
+	@$(MAKE) -C $(OPS)/services up
 
 update:
 	@git diff --exit-code --quiet
