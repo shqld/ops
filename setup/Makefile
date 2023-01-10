@@ -26,7 +26,7 @@ setup: .task/agent .task/login-github .task/keygen .task/auth-git .task/newrelic
 	$(touch)
 
 .task/auth-git: .task/keygen .task/login-github
-	@gh api -X POST /user/keys -F title=shqld@$(shell hostname) -F key="$(file < $(HOME)/.ssh/git@github.com/id.pub)"
+	@gh api -X POST /repos/shqld/ops/keys -F title=shqld@$(shell hostname) -F key="$(file < $(HOME)/.ssh/git@github.com/id.pub)" -F readonly=true
 	$(touch)
 
 .task/newrelic:
